@@ -34,7 +34,6 @@ namespace VoucherAPILibrary.Dao
                 using (var conn = Connection)
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("UserId", voucher.UserId);
                     parameters.Add("VoucherType", voucher.VoucherType);
                     parameters.Add("DiscountType", voucher.Discount.DiscountType);
                     parameters.Add("PercentOff", voucher.Discount.PercentOff);
@@ -49,6 +48,7 @@ namespace VoucherAPILibrary.Dao
                     parameters.Add("ExpirationDate", voucher.ExpirationDate);
                     parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
                     parameters.Add("RedeemedCount", voucher.Redemption.RedeemedCount);
+                    parameters.Add("RedeemedAmount", voucher.Redemption.RedeemedAmount);
                     parameters.Add("Length", voucher.Metadata.Length);
                     parameters.Add("Charset", voucher.Metadata.CharSet);
                     parameters.Add("Prefix", voucher.Metadata.Prefix);
@@ -69,7 +69,43 @@ namespace VoucherAPILibrary.Dao
             }
             catch (Exception ex)
             {
-                return new CreateVoucherResponse(null, voucher.VoucherType.ToString(), new ServiceResponse("500", "Something went wrong", new List<Error>
+                return new CreateVoucherResponse(new ServiceResponse("500", "Something went wrong", new List<Error>
+                {
+                    new Error(ex.GetHashCode().ToString(),ex.Message)
+                }));
+            }
+        }
+
+        public static async Task<GetVoucherResponse> GetVoucher(string code,string username)
+        {
+            GetVoucherResponse getVoucherResponse = null;
+            try
+            {
+                using (var conn = Connection)
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("code",code);
+                    parameters.Add("username", username);
+                    System.Data.IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                    while (reader.Read())
+                    {
+
+                        switch ((VoucherType)Enum.Parse(typeof(VoucherType),reader["VoucherType"].ToString()))
+                        {
+                            case VoucherType.DiscountVoucher:
+                                return getVoucherResponse = new GetVoucherResponse(reader["Code"].ToString(), VoucherType.DiscountVoucher.ToString(), new Discount((DiscountType)Enum.Parse(typeof(DiscountType),reader["DiscountType"].ToString()),Convert.ToInt32(reader["PercentOff"]), Convert.ToInt32(reader["AmountLimit"]), Convert.ToInt32(reader["AmountOff"]), reader["UnitOff"].ToString()), Convert.ToDateTime(reader["StartDate"].ToString()), Convert.ToDateTime(reader["ExpirationDate"].ToString()), new Redemption(null, Convert.ToInt32(reader["RedemptionCount"]), Convert.ToInt32(reader["RedeemedCount"]), Convert.ToInt32(reader["RedeemedAmount"])), new Metadata(Convert.ToInt32(reader["Length"]), (CharacterSet)Enum.Parse(typeof(CharacterSet), reader["Charset"].ToString()), reader["Prefix"].ToString(), reader["Suffix"].ToString(), reader["Pattern"].ToString()), Convert.ToDateTime(reader["CreationDate"].ToString()), (bool)Enum.Parse(typeof(bool), reader["Active"].ToString()), new ServiceResponse("200", "Successful", null));
+                            case VoucherType.GiftVoucher:
+                                return getVoucherResponse = new GetVoucherResponse(reader["Code"].ToString(), VoucherType.GiftVoucher.ToString(), new Gift(Convert.ToInt32(reader["GiftAmount"]),Convert.ToInt32(reader["GiftBalance"])), Convert.ToDateTime(reader["StartDate"].ToString()), Convert.ToDateTime(reader["ExpirationDate"].ToString()), new Redemption(null, Convert.ToInt32(reader["RedemptionCount"]), Convert.ToInt32(reader["RedeemedCount"]), Convert.ToInt32(reader["RedeemedAmount"])), new Metadata(Convert.ToInt32(reader["Length"]), (CharacterSet)Enum.Parse(typeof(CharacterSet), reader["Charset"].ToString()), reader["Prefix"].ToString(), reader["Suffix"].ToString(), reader["Pattern"].ToString()), Convert.ToDateTime(reader["CreationDate"].ToString()), (bool)Enum.Parse(typeof(bool), reader["Active"].ToString()), new ServiceResponse("200", "Successful", null));
+                            case VoucherType.ValueVoucher:
+                                return getVoucherResponse = new GetVoucherResponse(reader["Code"].ToString(), VoucherType.ValueVoucher.ToString(), new Value(Convert.ToInt64(reader["VirtualPin"]), (Value_Type)Enum.Parse(typeof(Value_Type), reader["ValueType"].ToString())), Convert.ToDateTime(reader["StartDate"].ToString()), Convert.ToDateTime(reader["ExpirationDate"].ToString()), new Redemption(null, Convert.ToInt32(reader["RedemptionCount"]), Convert.ToInt32(reader["RedeemedCount"]), Convert.ToInt32(reader["RedeemedAmount"])), new Metadata(Convert.ToInt32(reader["Length"]), (CharacterSet)Enum.Parse(typeof(CharacterSet), reader["Charset"].ToString()), reader["Prefix"].ToString(), reader["Suffix"].ToString(), reader["Pattern"].ToString()), Convert.ToDateTime(reader["CreationDate"].ToString()),(bool)Enum.Parse(typeof(bool),reader["Active"].ToString()), new ServiceResponse("200","Successful",null));
+                        }
+                    }
+                    return getVoucherResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new GetVoucherResponse(new ServiceResponse("500", "Something went wrong", new List<Error>
                 {
                     new Error(ex.GetHashCode().ToString(),ex.Message)
                 }));

@@ -20,5 +20,14 @@ namespace VoucherAPILibrary.Models
 
         //Properties of an Unit Voucher
         public string UnitOff { get; set; }
+
+        public Discount(DiscountType discountType, int percentOff, int amountLimit, int amountOff, string unitOff)
+        {
+            DiscountType = discountType;
+            PercentOff = percentOff;
+            AmountLimit = amountLimit;
+            AmountOff = amountOff;
+            UnitOff = unitOff;
+        }
     }
 }

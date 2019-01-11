@@ -19,5 +19,11 @@ namespace VoucherAPI.Controllers
             return Ok(await VoucherDao.CreateVoucher(voucher));
         }
 
+        [HttpGet("{code}")]
+        public async Task<ActionResult> GetVoucher(string code,[FromHeader] string username)
+        {
+            return Ok(await VoucherDao.GetVoucher(code,username));
+        }
+
     }
 }

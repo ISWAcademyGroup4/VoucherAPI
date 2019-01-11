@@ -14,6 +14,14 @@ namespace VoucherAPILibrary.Models
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public string Pattern { get; set; }
-        
+
+        public Metadata(int length, CharacterSet charSet, string prefix, string suffix, string pattern)
+        {
+            Length = length;
+            CharSet = charSet;
+            Prefix = prefix;
+            Suffix = suffix;
+            Pattern = pattern;
+        }
     }
 }

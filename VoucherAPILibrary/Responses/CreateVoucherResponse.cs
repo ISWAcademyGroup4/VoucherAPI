@@ -19,5 +19,10 @@ namespace VoucherAPILibrary.Responses
             VoucherType = voucherType;      
             ServiceResponse = serviceResponse;
         }
+
+        public CreateVoucherResponse(ServiceResponse serviceResponse)
+        {
+            ServiceResponse = serviceResponse;
+        }
     }
 }

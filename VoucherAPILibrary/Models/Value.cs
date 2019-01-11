@@ -11,5 +11,11 @@ namespace VoucherAPILibrary.Models
     {
         public long VirtualPin { get; set; }
         public Value_Type ValueType {get;set;}
+
+        public Value(long virtualPin, Value_Type valueType)
+        {
+            VirtualPin = virtualPin;
+            ValueType = valueType;
+        }
     }
 }

@@ -10,5 +10,11 @@ namespace VoucherAPILibrary.Models
     {
         public int Amount { get; set; }
         public int Balance { get; set; }
+
+        public Gift(int amount, int balance)
+        {
+            Amount = amount;
+            Balance = balance;
+        }
     }
 }
