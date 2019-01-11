@@ -9,7 +9,7 @@ namespace VoucherAPILibrary.Models
 {
     public class Voucher
     {
-        public string Code { get; set; }
+        public string UserId { get; set; }
         public VoucherType VoucherType { get; set; }
         public Discount Discount { get; set; }
         public Gift Gift { get; set; }
@@ -21,8 +21,7 @@ namespace VoucherAPILibrary.Models
         public Metadata Metadata { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreationDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public string DeletedBy { get; set; }
+        public int VoucherCount { get; set; }
 
     }
 }

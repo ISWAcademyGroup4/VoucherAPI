@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VoucherAPILibrary.Utils
 {
-    public class UserIdGenerator
+    public class IdGenerator
     {
         private static Random random = new Random();
         public static string RandomGen(int Length)

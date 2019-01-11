@@ -9,7 +9,7 @@ namespace VoucherAPILibrary.Models
 {
     public class Metadata
     {
-        public string Length { get; set; }
+        public int Length { get; set; }
         public CharacterSet CharSet { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }

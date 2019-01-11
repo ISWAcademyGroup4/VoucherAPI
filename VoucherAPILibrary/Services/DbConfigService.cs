@@ -17,10 +17,9 @@ namespace VoucherAPILibrary.Services
 
         public static IDbConnection Connection
         {
-
             get
             {
-                return new SqlConnection("Data Source=ENUNWAH-PC\\SQLEXPRESS;Initial Catalog=FNMusicDb;Integrated Security=True");
+                return new SqlConnection("Data Source=ENUNWAH-PC\\SQLEXPRESS;Initial Catalog=VoucherzDb;User ID=sa;Password=welcome12@");
             }
         }
     }

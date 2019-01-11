@@ -10,5 +10,11 @@ namespace VoucherAPILibrary.Utils
     {
         public string ErrorCode { get; set; }
         public string ErrorDescription { get; set; }
+
+        public Error(string errorCode, string errorDescription)
+        {
+            ErrorCode = errorCode;
+            ErrorDescription = errorDescription;
+        }
     }
 }

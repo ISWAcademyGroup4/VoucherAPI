@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VoucherAPILibrary.Dao;
 using VoucherAPILibrary.Models;
 
 namespace VoucherAPI.Controllers
@@ -12,10 +13,10 @@ namespace VoucherAPI.Controllers
     [ApiController]
     public class VoucherController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult> GetVoucher(Voucher voucher)
+        [HttpPost]
+        public async Task<ActionResult> CreateVoucher(Voucher voucher)
         {
-            return Ok(voucher);
+            return Ok(await VoucherDao.CreateVoucher(voucher));
         }
 
     }

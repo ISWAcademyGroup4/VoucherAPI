@@ -7,14 +7,17 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Responses
 {
-    public class CreateVoucherResponse : ServiceResponse
+    public class CreateVoucherResponse
     {
-        public string Code { get; set; }
-        public VoucherType VoucherType { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public List<string> Vouchers { get; set; }
+        public string VoucherType { get; set; }
+        public ServiceResponse ServiceResponse { get; set; }
 
-        
-        
+        public CreateVoucherResponse(List<string> vouchers, string voucherType, ServiceResponse serviceResponse)
+        {
+            Vouchers = vouchers;
+            VoucherType = voucherType;      
+            ServiceResponse = serviceResponse;
+        }
     }
 }
