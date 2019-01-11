@@ -10,7 +10,6 @@ namespace VoucherAPILibrary.Models
     public class Redemption
     {
         public List<RedemptionUser> RedemptionUserList { get; set; }
-        public int RedemptionUserCount { get; set; }
         public int RedemptionCount { get; set; }
         public int RedeemedCount { get; set; }
         public int RedeemedAmount { get; set; }
