@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace VoucherAPILibrary.Domain
 {
-    public class BaseEntity<T> where T : struct
+    public class BaseEntity
     {
-        public virtual T Id { get; set; }
+        public virtual string Id { get; set; }
         
     }
 }

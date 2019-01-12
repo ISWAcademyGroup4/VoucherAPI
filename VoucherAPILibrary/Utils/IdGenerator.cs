@@ -11,7 +11,7 @@ namespace VoucherAPILibrary.Utils
         private static Random random = new Random();
         public static string RandomGen(int Length)
         {
-            const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefhijklmnopqrstuvwxyz1234567890";
+            const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             return new string(Enumerable.Repeat(characters, Length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }

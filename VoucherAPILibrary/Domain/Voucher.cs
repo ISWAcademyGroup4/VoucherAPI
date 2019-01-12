@@ -8,9 +8,9 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Domain
 {
-    public class Voucher
+    public class Voucher : BaseEntity
     {
-        public virtual string UserId { get; set; }
+        public override string Id { get => base.Id; set => base.Id = IdGenerator.RandomGen(15); }
         public virtual VoucherType VoucherType { get; set; }
         public virtual Discount Discount { get; set; }
         public virtual Gift Gift { get; set; }
@@ -22,6 +22,7 @@ namespace VoucherAPILibrary.Domain
         public virtual Metadata Metadata { get; set; }
         public virtual string CreatedBy { get; set; }
         public virtual DateTime CreationDate { get; set; }
-        public virtual int VoucherCount { get; set; }        
+        public virtual int VoucherCount { get; set; }
+        
     }
 }

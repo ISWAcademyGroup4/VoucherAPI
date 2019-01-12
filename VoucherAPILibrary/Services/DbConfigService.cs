@@ -19,7 +19,7 @@ namespace VoucherAPILibrary.Services
         {
             get
             {
-                return new SqlConnection("Data Source=ENUNWAH-PC\\SQLEXPRESS;Initial Catalog=VoucherzDb;User ID=sa;Password=welcome12@");
+                return new SqlConnection(Configuration.GetConnectionString("VoucherDb"));
             }
         }
     }
