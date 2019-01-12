@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VoucherAPILibrary.Dao;
+using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Models;
+using VoucherAPILibrary.Responses;
+using VoucherAPILibrary.Services;
 
 namespace VoucherAPI.Controllers
 {
@@ -13,10 +16,17 @@ namespace VoucherAPI.Controllers
     [ApiController]
     public class VoucherController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult> CreateVoucher(Voucher voucher)
+        public readonly IVoucherService _voucherService;
+        
+        public VoucherController(IVoucherService voucherService)
         {
-            return Ok(await VoucherDao.CreateVoucher(voucher));
+            this._voucherService = voucherService;
+        }
+
+        [HttpPost]
+        public Task<CreateVoucherResponse> CreateVoucher(Voucher voucher)
+        {
+            return _voucherService.CreateVoucher(voucher);
         }
 
         [HttpGet("{code}")]

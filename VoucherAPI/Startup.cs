@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VoucherAPILibrary.Services;
 
 namespace VoucherAPI
 {
@@ -29,6 +30,7 @@ namespace VoucherAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(this.Configuration.GetConnectionString("VoucherDb")));
+            services.AddTransient<IVoucherService, VoucherService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

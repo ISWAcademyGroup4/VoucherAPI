@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Models;
 using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Services;
