@@ -21,6 +21,7 @@ namespace VoucherAPI.Controllers
         public VoucherController(IVoucherService voucherService)
         {
             this._voucherService = voucherService;
+            
         }
 
         [HttpPost]
@@ -30,9 +31,9 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet("{code}")]
-        public async Task<ActionResult> GetVoucher(string code,[FromHeader] string username)
+        public Task<GetVoucherResponse> GetVoucher(string code,[FromHeader] string MerchantId)
         {
-            return Ok(await VoucherDao.GetVoucher(code,username));
+            return _voucherService.GetVoucher(code, MerchantId);
         }
 
     }

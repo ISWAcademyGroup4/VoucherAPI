@@ -9,6 +9,7 @@ using VoucherAPILibrary.Dao;
 using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Utils;
+using VoucherAPILibrary.Models;
 
 namespace VoucherAPILibrary.Services
 {
@@ -71,11 +72,119 @@ namespace VoucherAPILibrary.Services
                 catch (Exception ex)
                 {
                     return new CreateVoucherResponse(new ServiceResponse("500", "Something went wrong", new List<Error>
-                {
-                    new Error(ex.GetHashCode().ToString(),ex.Message)
-                }));
+                    {
+                        new Error(ex.GetHashCode().ToString(),ex.Message)
+                    }));
                 }
             });
+        }
+        public Task<GetVoucherResponse> GetVoucher(string voucherCode, string MerchantId)
+        {
+            return Task.Run(async () =>
+            {
+                GetVoucherResponse getVoucherResponse = null;
+                try
+                {
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("code", voucherCode);
+                        parameters.Add("username", MerchantId);
+                        System.Data.IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                        while (reader.Read())
+                        {
+                            getVoucherResponse = new GetVoucherResponse(
+                                reader["Code"].ToString(), 
+                                GetEnumValue.GetEnumValueByString<VoucherType>(reader["VoucherType"].ToString()), 
+                                new Discount(
+                                    GetEnumValue.GetEnumValueByString<DiscountType>(reader["DiscountType"].ToString()), 
+                                    Convert.ToInt32(reader["PercentOff"]), 
+                                    Convert.ToInt32(reader["AmountLimit"]), 
+                                    Convert.ToInt32(reader["AmountOff"]), 
+                                    reader["UnitOff"].ToString()), 
+                                new Gift(
+                                    Convert.ToInt32(reader["GiftAmount"]), 
+                                    Convert.ToInt32(reader["GiftBalance"])), 
+                                new Value(
+                                    Convert.ToInt64(reader["VirtualPin"]), 
+                                    GetEnumValue.GetEnumValueByString<Value_Type>(reader["ValueType"].ToString())), 
+                                Convert.ToDateTime(reader["StartDate"].ToString()), 
+                                Convert.ToDateTime(reader["ExpirationDate"].ToString()), 
+                                new Redemption(
+                                    null, 
+                                    Convert.ToInt32(reader["RedemptionCount"]), 
+                                    Convert.ToInt32(reader["RedeemedCount"]), 
+                                    Convert.ToInt32(reader["RedeemedAmount"])), 
+                                new Metadata(
+                                    Convert.ToInt32(reader["Length"]), 
+                                    GetEnumValue.GetEnumValueByString<CharacterSet>(reader["Charset"].ToString()), 
+                                    reader["Prefix"].ToString(), 
+                                    reader["Suffix"].ToString(), 
+                                    reader["Pattern"].ToString()), 
+                                    Convert.ToDateTime(reader["CreationDate"].ToString()), 
+                                    Convert.ToBoolean(reader["Active"]), 
+                                new ServiceResponse("200", "Successfull", null));
+                            Console.WriteLine(getVoucherResponse);
+
+                            switch (getVoucherResponse.VoucherType)
+                            {
+                                case VoucherType.DiscountVoucher:
+                                    getVoucherResponse.Gift = null;
+                                    getVoucherResponse.Value = null;
+                                    return getVoucherResponse;
+                                case VoucherType.GiftVoucher:
+                                    getVoucherResponse.Discount = null;
+                                    getVoucherResponse.Value = null;
+                                    return getVoucherResponse;
+                                case VoucherType.ValueVoucher:
+                                    getVoucherResponse.Discount = null;
+                                    getVoucherResponse.Gift = null;
+                                    return getVoucherResponse;
+                                    
+                            }
+                            
+                        }
+                        return getVoucherResponse;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                    return new GetVoucherResponse(new ServiceResponse("500", "Something went wrong", new List<Error>
+                    {
+                        new Error(ex.GetHashCode().ToString(),ex.Message)
+                    }));
+                }
+            });
+        }
+        public Task<UpdateVoucherResponse> UpdateVoucher(string voucherCode, Voucher voucher)
+        {
+            
+        }
+        public Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode, string MerchantId)
+        {
+            return Task.Run(async () =>
+{
+                try
+                {
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("voucherCode", voucherCode);
+                        parameters.Add("MerchantId", MerchantId);
+                        parameters.Add("DeletionDate", new DateTime());
+
+                        await conn.ExecuteAsync("DeleteVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                    }
+
+                    return new DeleteVoucherResponse(new ServiceResponse("200","Voucher was Successfully Deleted",null));
+                }
+                catch (Exception ex)
+                {
+                    return new DeleteVoucherResponse(new ServiceResponse("404", "Something went wrong", new List<Error> { new Error(ex.GetHashCode().ToString(), ex.Message) }));
+                }
+            });
+            
         }
     }
 }

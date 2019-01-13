@@ -12,6 +12,8 @@ namespace VoucherAPILibrary.Utils
         public string ResponseMessage { get; set; }
         public List<Error> Errors { get; set; }
 
+        
+
         public ServiceResponse(string responseCode, string responseMessage, List<Error> errors)
         {
             ResponseCode = responseCode;

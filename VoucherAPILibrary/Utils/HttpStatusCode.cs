@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VoucherAPILibrary.Utils
 {
-    public class RedemptionUser
+    public enum HttpStatusCode
     {
-        public string UserId { get; set; }
-        public string VoucherId { get; set; }
+        [Description("Continue")]
+        Continue = 100,
+        Switching_Protocols = 101
     }
 }

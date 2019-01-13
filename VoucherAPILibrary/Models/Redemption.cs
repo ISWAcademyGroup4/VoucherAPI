@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Models
@@ -13,6 +14,7 @@ namespace VoucherAPILibrary.Models
         public int RedemptionCount { get; set; }
         public int RedeemedCount { get; set; }
         public int RedeemedAmount { get; set; }
+        public bool isRedeemed { get; set; }
 
         public Redemption(List<RedemptionUser> redemptionUserList, int redemptionCount, int redeemedCount, int redeemedAmount)
         {
