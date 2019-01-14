@@ -8,8 +8,8 @@ namespace VoucherAPILibrary.Domain
 {
     public class BaseEntity<T> where T: struct
     {
-        public virtual T Id { get; set; }
         public virtual string VoucherCode { get; set; }
+        public virtual string Campaign { get; set; }
         
     }
 }

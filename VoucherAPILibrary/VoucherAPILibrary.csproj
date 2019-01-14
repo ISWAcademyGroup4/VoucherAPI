@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dao\VoucherDao.cs" />
     <Compile Include="Domain\BaseEntity.cs" />
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Gift.cs" />
@@ -56,9 +55,16 @@
     <Compile Include="Models\Value.cs" />
     <Compile Include="Domain\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\BaseResponseEntity.cs" />
     <Compile Include="Responses\CreateVoucherResponse.cs" />
     <Compile Include="Responses\DeleteVoucherResponse.cs" />
+    <Compile Include="Responses\DisableVoucherResponse.cs" />
+    <Compile Include="Responses\AddGiftBalanceResponse.cs" />
+    <Compile Include="Responses\EnableVoucherResponse.cs" />
     <Compile Include="Responses\GetVoucherResponse.cs" />
+    <Compile Include="Responses\ImportVouchersCSVResponse.cs" />
+    <Compile Include="Responses\ImportVouchersResponse.cs" />
+    <Compile Include="Responses\ListVoucherResponse.cs" />
     <Compile Include="Responses\UpdateVoucherResponse.cs" />
     <Compile Include="Services\DbConfigService.cs" />
     <Compile Include="Services\IVoucherService.cs" />
@@ -69,9 +75,11 @@
     <Compile Include="Utils\Error.cs" />
     <Compile Include="Utils\GetEnumValue.cs" />
     <Compile Include="Domain\RedemptionUser.cs" />
+    <Compile Include="Utils\HttpServiceResponse.cs" />
     <Compile Include="Utils\HttpStatusCode.cs" />
     <Compile Include="Utils\ServiceResponse.cs" />
     <Compile Include="Utils\IdGenerator.cs" />
+    <Compile Include="Utils\ExceptionHandlerClass.cs" />
     <Compile Include="Utils\Value_Type.cs" />
     <Compile Include="Utils\VoucherType.cs" />
   </ItemGroup>

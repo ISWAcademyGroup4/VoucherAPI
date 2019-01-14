@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using VoucherAPILibrary.Dao;
 using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Utils;
 using VoucherAPILibrary.Models;
+using System.Data.SqlClient;
 
 namespace VoucherAPILibrary.Services
 {
@@ -108,13 +108,14 @@ namespace VoucherAPILibrary.Services
                                 new Value(
                                     Convert.ToInt64(reader["VirtualPin"]), 
                                     GetEnumValue.GetEnumValueByString<Value_Type>(reader["ValueType"].ToString())), 
-                                Convert.ToDateTime(reader["StartDate"].ToString()), 
-                                Convert.ToDateTime(reader["ExpirationDate"].ToString()), 
+                                Convert.ToDateTime(reader["StartDate"]), 
+                                Convert.ToDateTime(reader["ExpirationDate"]), 
                                 new Redemption(
                                     null, 
                                     Convert.ToInt32(reader["RedemptionCount"]), 
                                     Convert.ToInt32(reader["RedeemedCount"]), 
-                                    Convert.ToInt32(reader["RedeemedAmount"])), 
+                                    Convert.ToInt32(reader["RedeemedAmount"]),
+                                    Convert.ToBoolean(reader["isRedeemed"])),
                                 new Metadata(
                                     Convert.ToInt32(reader["Length"]), 
                                     GetEnumValue.GetEnumValueByString<CharacterSet>(reader["Charset"].ToString()), 
@@ -139,8 +140,7 @@ namespace VoucherAPILibrary.Services
                                 case VoucherType.ValueVoucher:
                                     getVoucherResponse.Discount = null;
                                     getVoucherResponse.Gift = null;
-                                    return getVoucherResponse;
-                                    
+                                    return getVoucherResponse;                                   
                             }
                             
                         }
@@ -157,9 +157,30 @@ namespace VoucherAPILibrary.Services
                 }
             });
         }
-        public Task<UpdateVoucherResponse> UpdateVoucher(string voucherCode, Voucher voucher)
+        public Task<UpdateVoucherResponse> UpdateVoucher(string voucherCode, string ExpirationDate, string MerchantId)
         {
-            
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    using(var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+
+                        parameters.Add("voucherCode", voucherCode);
+                        parameters.Add("ExpirationDate", ExpirationDate);
+                        parameters.Add("MerchantId", MerchantId);
+
+                        await conn.ExecuteAsync("UpdateVoucherProcedure",parameters,commandType: System.Data.CommandType.StoredProcedure);
+
+                        return new UpdateVoucherResponse("Your Voucher was updated Successfully", new ServiceResponse("200", "Successful", null));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new UpdateVoucherResponse("Sorry, we couldn't process your request at this time", new ServiceResponse("400", "Something went wrong", new List<Error> { new Error(ex.GetHashCode().ToString(), ex.Message) }));
+                }
+            });
         }
         public Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode, string MerchantId)
         {
