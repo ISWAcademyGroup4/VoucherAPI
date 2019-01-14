@@ -22,9 +22,11 @@ namespace VoucherAPILibrary.Services
         public Task<CreateVoucherResponse> CreateVoucher(Voucher voucher)
         {
             return Task.Run(async()=> {
+
                 //Generate Random Voucher ID's & Voucher Codes
                 List<string> voucherIdList = new List<string>();
                 List<string> voucherCodeList = new List<string>();
+
                 for (int i = 0; i < voucher.VoucherCount; i++)
                 {
                     voucherIdList.Add(IdGenerator.RandomGen(15));
@@ -36,6 +38,7 @@ namespace VoucherAPILibrary.Services
                     using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
+
                         parameters.Add("VoucherType", voucher.VoucherType);
                         parameters.Add("DiscountType", voucher.Discount.DiscountType);
                         parameters.Add("PercentOff", voucher.Discount.PercentOff);
@@ -63,6 +66,7 @@ namespace VoucherAPILibrary.Services
                         {
                             parameters.Add("VoucherId", voucherIdList.ElementAt<string>(i));
                             parameters.Add("Code", voucherCodeList.ElementAt<string>(i));
+
                             await conn.ExecuteAsync("CreateVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
                         }
 
@@ -88,11 +92,15 @@ namespace VoucherAPILibrary.Services
                     using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
+
                         parameters.Add("code", voucherCode);
                         parameters.Add("username", MerchantId);
+
                         System.Data.IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
                         while (reader.Read())
                         {
+
                             getVoucherResponse = new GetVoucherResponse(
                                 reader["Code"].ToString(), 
                                 GetEnumValue.GetEnumValueByString<VoucherType>(reader["VoucherType"].ToString()), 
@@ -125,8 +133,8 @@ namespace VoucherAPILibrary.Services
                                     Convert.ToDateTime(reader["CreationDate"].ToString()), 
                                     Convert.ToBoolean(reader["Active"]), 
                                 new ServiceResponse("200", "Successfull", null));
-                            Console.WriteLine(getVoucherResponse);
 
+                            //Customise Response according to Voucher Type
                             switch (getVoucherResponse.VoucherType)
                             {
                                 case VoucherType.DiscountVoucher:
@@ -142,10 +150,11 @@ namespace VoucherAPILibrary.Services
                                     getVoucherResponse.Gift = null;
                                     return getVoucherResponse;                                   
                             }
-                            
-                        }
-                        return getVoucherResponse;
+
+                            reader.Close(); 
+                        }                     
                     }
+                    return getVoucherResponse;
                 }
                 catch (Exception ex)
                 {
@@ -185,7 +194,7 @@ namespace VoucherAPILibrary.Services
         public Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode, string MerchantId)
         {
             return Task.Run(async () =>
-{
+            {
                 try
                 {
                     using (var conn = Connection)
@@ -204,8 +213,7 @@ namespace VoucherAPILibrary.Services
                 {
                     return new DeleteVoucherResponse(new ServiceResponse("404", "Something went wrong", new List<Error> { new Error(ex.GetHashCode().ToString(), ex.Message) }));
                 }
-            });
-            
+            }); 
         }
     }
 }
