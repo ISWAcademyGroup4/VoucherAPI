@@ -38,8 +38,9 @@ namespace VoucherAPILibrary.Services
                     using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
-
+                        
                         parameters.Add("VoucherType", voucher.VoucherType);
+                        parameters.Add("Campaign", voucher.Campaign);
                         parameters.Add("DiscountType", voucher.Discount.DiscountType);
                         parameters.Add("PercentOff", voucher.Discount.PercentOff);
                         parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
@@ -52,8 +53,6 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("StartDate", voucher.StartDate);
                         parameters.Add("ExpirationDate", voucher.ExpirationDate);
                         parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
-                        parameters.Add("RedeemedCount", voucher.Redemption.RedeemedCount);
-                        parameters.Add("RedeemedAmount", voucher.Redemption.RedeemedAmount);
                         parameters.Add("Length", voucher.Metadata.Length);
                         parameters.Add("Charset", voucher.Metadata.CharSet);
                         parameters.Add("Prefix", voucher.Metadata.Prefix);
@@ -93,8 +92,8 @@ namespace VoucherAPILibrary.Services
                     {
                         DynamicParameters parameters = new DynamicParameters();
 
-                        parameters.Add("code", voucherCode);
-                        parameters.Add("username", MerchantId);
+                        parameters.Add("Code", voucherCode);
+                        parameters.Add("MerchantId", MerchantId);
 
                         System.Data.IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
@@ -103,7 +102,8 @@ namespace VoucherAPILibrary.Services
 
                             getVoucherResponse = new GetVoucherResponse(
                                 reader["Code"].ToString(), 
-                                GetEnumValue.GetEnumValueByString<VoucherType>(reader["VoucherType"].ToString()), 
+                                GetEnumValue.GetEnumValueByString<VoucherType>(reader["VoucherType"].ToString()),
+                                reader["Campaign"].ToString(), 
                                 new Discount(
                                     GetEnumValue.GetEnumValueByString<DiscountType>(reader["DiscountType"].ToString()), 
                                     Convert.ToInt32(reader["PercentOff"]), 

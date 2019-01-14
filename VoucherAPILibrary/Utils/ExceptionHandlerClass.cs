@@ -9,10 +9,6 @@ namespace VoucherAPILibrary.Utils
 {
     public class ExceptionHandlerClass
     {
-
-        public static HttpServiceResponse SQLExceptionHandler(Exception ex)
-        {
-            
-        }
+        
     }
 }
