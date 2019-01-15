@@ -8,16 +8,16 @@ namespace VoucherAPILibrary.Utils
 {
     public class ServiceResponse
     {
-        public string ResponseCode { get; set; }
+        public HttpStatusCode ResponseCode { get; set; }
         public string ResponseMessage { get; set; }
+        public string Description { get; set; }
         public List<Error> Errors { get; set; }
 
-        
-
-        public ServiceResponse(string responseCode, string responseMessage, List<Error> errors)
+        public ServiceResponse(HttpStatusCode responseCode, string responseMessage, string description, List<Error> errors)
         {
             ResponseCode = responseCode;
-            ResponseMessage = responseMessage;
+            ResponseMessage = responseMessage ?? throw new ArgumentNullException(nameof(responseMessage));
+            Description = description ?? throw new ArgumentNullException(nameof(description));
             Errors = errors;
         }
     }

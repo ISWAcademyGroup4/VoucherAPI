@@ -13,8 +13,8 @@ namespace VoucherAPILibrary.Services
     {
         Task<CreateVoucherResponse> CreateVoucher(Voucher voucher);
         Task<GetVoucherResponse> GetVoucher(string voucherCode, string MerchantId);
-        Task<UpdateVoucherResponse> UpdateVoucher(string code, string ExpirationDate, string MerchantId);
-        Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode, string MerchantId);
-        
+        Task<UpdateVoucherResponse> UpdateVoucher(string code, DateTime ExpirationDate);
+        Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode);
+        Task<ListVoucherResponse> ListVoucher(string campaign);
     }
 }

@@ -7,6 +7,7 @@ using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Models;
 using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Services;
+using VoucherAPILibrary.Utils;
 
 namespace VoucherAPI.Controllers
 {
@@ -20,6 +21,8 @@ namespace VoucherAPI.Controllers
         public VoucherController(IVoucherService voucherService)
         {
             this._voucherService = voucherService;
+
+           
         }
 
         [HttpPost]
@@ -35,15 +38,15 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPut("{Code}")]
-        public Task<UpdateVoucherResponse> UpdateVoucher(string Code, [FromQuery] string ExpirationDate, [FromQuery] string Merchant)
+        public Task<UpdateVoucherResponse> UpdateVoucher(string Code, [FromQuery] DateTime ExpirationDate)
         {
-            return _voucherService.UpdateVoucher(Code, ExpirationDate, Merchant);
+            return _voucherService.UpdateVoucher(Code, ExpirationDate);
         }
 
         [HttpDelete("{Code}")]
         public Task<DeleteVoucherResponse> Deletevoucher(string code, [FromQuery] string Merchant)
         {
-            return _voucherService.DeleteVoucher(code, Merchant);
+            return _voucherService.DeleteVoucher(code);
         }
 
         [HttpGet("{Campaign}")]

@@ -73,13 +73,14 @@
     <Compile Include="Utils\CodeGenerator.cs" />
     <Compile Include="Utils\DiscountType.cs" />
     <Compile Include="Utils\Error.cs" />
+    <Compile Include="Utils\ErrorStatusCode.cs" />
     <Compile Include="Utils\GetEnumValue.cs" />
     <Compile Include="Domain\RedemptionUser.cs" />
     <Compile Include="Utils\HttpServiceResponse.cs" />
     <Compile Include="Utils\HttpStatusCode.cs" />
     <Compile Include="Utils\ServiceResponse.cs" />
     <Compile Include="Utils\IdGenerator.cs" />
-    <Compile Include="Utils\ExceptionHandlerClass.cs" />
+    <Compile Include="Utils\HttpResponseHandler.cs" />
     <Compile Include="Utils\Value_Type.cs" />
     <Compile Include="Utils\VoucherType.cs" />
   </ItemGroup>
