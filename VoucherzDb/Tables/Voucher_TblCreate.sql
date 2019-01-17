@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[Voucher_Tbl]    Script Date: 1/15/2019 10:07:09 PM ******/
+/****** Object:  Table [dbo].[Voucher_Tbl]    Script Date: 1/17/2019 9:38:10 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -25,6 +25,9 @@ CREATE TABLE [dbo].[Voucher_Tbl](
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Voucher_Tbl] ADD  CONSTRAINT [DF_Voucher_Tbl_Active]  DEFAULT ((0)) FOR [Active]
 GO
 
 ALTER TABLE [dbo].[Voucher_Tbl]  WITH CHECK ADD  CONSTRAINT [FK_Voucher_Tbl_Campaign_Tbl] FOREIGN KEY([CampaignId])

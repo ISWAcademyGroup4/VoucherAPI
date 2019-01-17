@@ -10,12 +10,12 @@ namespace VoucherAPILibrary.Responses
 {
     public class UpdateVoucherResponse
     {
-        public virtual string UpdateResponseMessage { get; set; }
+        public virtual string Message { get; set; }
         public virtual ServiceResponse ServiceResponse { get; set; }
 
-        public UpdateVoucherResponse(string updateResponseMessage, ServiceResponse serviceResponse)
+        public UpdateVoucherResponse(string Message, ServiceResponse serviceResponse)
         {
-            UpdateResponseMessage = updateResponseMessage;
+            Message = Message;
             ServiceResponse = serviceResponse;
         }
     }

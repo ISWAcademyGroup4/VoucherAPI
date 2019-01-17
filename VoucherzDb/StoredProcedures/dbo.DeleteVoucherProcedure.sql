@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  StoredProcedure [dbo].[DeleteVoucherProcedure]    Script Date: 1/14/2019 4:47:21 PM ******/
+/****** Object:  StoredProcedure [dbo].[DeleteVoucherProcedure]    Script Date: 1/17/2019 9:55:25 AM ******/
 SET ANSI_NULLS ON
 GO
 

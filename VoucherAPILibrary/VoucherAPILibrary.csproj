@@ -58,7 +58,7 @@
     <Compile Include="Models\Value.cs" />
     <Compile Include="Domain\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Responses\BaseVoucherEntity.cs" />
+    <Compile Include="Responses\Models\BaseVoucherEntity.cs" />
     <Compile Include="Responses\CreateVoucherResponse.cs" />
     <Compile Include="Responses\DeleteVoucherResponse.cs" />
     <Compile Include="Responses\DisableVoucherResponse.cs" />

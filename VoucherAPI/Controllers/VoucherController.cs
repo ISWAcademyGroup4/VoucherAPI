@@ -20,11 +20,10 @@ namespace VoucherAPI.Controllers
 
         public VoucherController(IVoucherService voucherService)
         {
-            this._voucherService = voucherService;
-
-           
+            this._voucherService = voucherService;      
         }
 
+        
         [HttpPost]
         public Task<CreateVoucherResponse> CreateVoucher(Voucher voucher)
         {

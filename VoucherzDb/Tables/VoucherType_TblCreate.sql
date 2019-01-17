@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[VoucherType_Tbl]    Script Date: 1/15/2019 10:07:20 PM ******/
+/****** Object:  Table [dbo].[VoucherType_Tbl]    Script Date: 1/17/2019 9:38:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,3 +18,11 @@ CREATE TABLE [dbo].[VoucherType_Tbl](
 ) ON [PRIMARY]
 GO
 
+INSERT INTO [dbo].[VoucherType_Tbl] (VoucherType) VALUES ('Discount')
+GO
+
+INSERT INTO [dbo].[VoucherType_Tbl] (VoucherType) VALUES ('Gift')
+GO
+
+INSERT INTO [dbo].[VoucherType_Tbl] (VoucherType) VALUES ('Value')
+GO

@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[CharacterSet_Tbl]    Script Date: 1/15/2019 10:02:53 PM ******/
+/****** Object:  Table [dbo].[CharacterSet_Tbl]    Script Date: 1/17/2019 9:36:11 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,3 +18,11 @@ CREATE TABLE [dbo].[CharacterSet_Tbl](
 ) ON [PRIMARY]
 GO
 
+INSERT INTO [dbo].[CharacterSet_Tbl] (CharacterSet) VALUES ('Numeric')
+GO
+
+INSERT INTO [dbo].[CharacterSet_Tbl] (CharacterSet) VALUES ('Alphabetic')
+GO
+
+INSERT INTO [dbo].[CharacterSet_Tbl] (CharacterSet) VALUES ('Alphanumeric')
+GO

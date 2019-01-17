@@ -20,7 +20,7 @@
     "VoucherAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/voucher",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

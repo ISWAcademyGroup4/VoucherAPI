@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[ValueType_Tbl]    Script Date: 1/15/2019 10:06:58 PM ******/
+/****** Object:  Table [dbo].[ValueType_Tbl]    Script Date: 1/17/2019 9:38:00 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,3 +18,8 @@ CREATE TABLE [dbo].[ValueType_Tbl](
 ) ON [PRIMARY]
 GO
 
+INSERT INTO [dbo].[ValueType_Tbl] (ValueType) VALUES ('Airtime')
+GO
+
+INSERT INTO [dbo].[ValueType_Tbl] (ValueType) VALUES ('Paycode')
+GO

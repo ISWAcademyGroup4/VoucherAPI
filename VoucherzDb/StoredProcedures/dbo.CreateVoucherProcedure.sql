@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  StoredProcedure [dbo].[CreateVoucherProcedure]    Script Date: 1/16/2019 8:23:41 AM ******/
+/****** Object:  StoredProcedure [dbo].[CreateVoucherProcedure]    Script Date: 1/17/2019 10:09:36 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -48,7 +48,7 @@ BEGIN TRANSACTION
 				--If not, insert @Campaign record into the Campaign_Tbl
 				IF NOT EXISTS(SELECT Campaign FROM Campaign_Tbl WHERE Campaign = @Campaign AND @Campaign != '')
 					BEGIN
-						INSERT INTO [dbo].[Campaign_Tbl] (Campaign) VALUES (@Campaign)
+						INSERT INTO [dbo].[Campaign_Tbl] (Campaign,MerchantId) VALUES (@Campaign,@CreatedBy)
 					END
 			END	
 		PRINT 'Inserted into Campaign_Tbl'
@@ -73,76 +73,78 @@ BEGIN TRANSACTION
 			END
 		PRINT 'Inserted into Voucher_Tbl'
 
-		BEGIN
 		--Insert into VoucherType Tables depending on the voucher type specified in @Voucherype variable
 		IF (@VoucherType = 0)
+		BEGIN
+			IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Discount_Tbl] WHERE VoucherId = @VoucherId)
 			BEGIN
-				IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Discount_Tbl] WHERE VoucherId = @VoucherId)
-				BEGIN
-					--IF it is a discount voucher, Insert into necessary columns depending on the discount properties
-					IF (@DiscountType = 0)
-						BEGIN
-							INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,AmountOff)
-							VALUES (@VoucherId,@DiscountType,@AmountOff)
-						END
-					ELSE IF (@DiscountType = 1)
-						BEGIN
-							INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,PercentOff,AmountLimit)
-							VALUES (@VoucherId,@DiscountType,@PercentOff,@AmountLimit)
-						END
-					ELSE IF (@DiscountType = 2)
-						BEGIN
-							INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,UnitOff)
-							VALUES (@VoucherId,@DiscountType,@UnitOff)
-						END
-				END
-			END
-		ELSE IF (@VoucherType = 1)
-			BEGIN
-				IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Gift_Tbl] WHERE VoucherId = @VoucherId)
-					BEGIN 
-						INSERT INTO [dbo].[Gift_Tbl] (VoucherId,Amount,Balance)
-						VALUES (@VoucherId,@GiftAmount,@GiftBalance)
-					END
-			END
-		ELSE IF (@VoucherType = 2)
-			BEGIN
-				IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Value_Tbl] WHERE VoucherId = @VoucherId)
+				--IF it is a discount voucher, Insert into necessary columns depending on the discount properties
+				IF (@DiscountType = 0)
 					BEGIN
-						INSERT INTO [VoucherzDb].[dbo].[Value_Tbl] (VoucherId,ValueType,VirtualPin)
-						VALUES (@VoucherId,@ValueType,@VirtualPin)
+						INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,AmountOff)
+						VALUES (@VoucherId,@DiscountType,@AmountOff)
+						PRINT 'Inserted into Discount Amount Tables'
 					END
+				ELSE IF (@DiscountType = 1)
+				BEGIN
+					INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,PercentOff,AmountLimit)
+					VALUES (@VoucherId,@DiscountType,@PercentOff,@AmountLimit)
+					PRINT 'Inserted into Discount Percentage Table'
+				END
+				ELSE IF (@DiscountType = 2)
+				BEGIN
+					INSERT INTO [dbo].[Discount_Tbl] (VoucherId,DiscountType,UnitOff)
+					VALUES (@VoucherId,@DiscountType,@UnitOff)
+					PRINT 'Inserted into Discount Unit Table'
+				END
 			END
 		END
-		PRINT 'Inserted into necessary VoucherType Tables'
-
-		--Insert into the Redemption Table
+		ELSE IF (@VoucherType = 1)
 		BEGIN
-			IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Redemption_Tbl] WHERE VoucherId = @VoucherId)
-				BEGIN
-					INSERT INTO [VoucherzDb].[dbo].[Redemption_Tbl] (VoucherId,RedemptionCount)
-					VALUES (@VoucherId,@RedemptionCount)
-				END
+			IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Gift_Tbl] WHERE VoucherId = @VoucherId)
+			BEGIN 
+				INSERT INTO [dbo].[Gift_Tbl] (VoucherId,Amount,Balance)
+				VALUES (@VoucherId,@GiftAmount,@GiftBalance)
+				PRINT 'Inserted into Gift Table'
+			END
 		END
-		PRINT 'Inserted into Redemption_Tbl'
-
-		--Insert Code configuration details into the metadata table
+		ELSE IF (@VoucherType = 2)
 		BEGIN
-			IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Metadata_Tbl] WHERE VoucherId = @VoucherId)
-				BEGIN
-					INSERT INTO [VoucherzDb].[dbo].[Metadata_Tbl] (VoucherId,[Length],Charset,Prefix,Suffix,Pattern)
-					VALUES (@VoucherId,@Length,@Charset,@Prefix,@Suffix,@Pattern)
-				END
+			IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Value_Tbl] WHERE VoucherId = @VoucherId)
+			BEGIN
+				INSERT INTO [VoucherzDb].[dbo].[Value_Tbl] (VoucherId,ValueType,VirtualPin)
+				VALUES (@VoucherId,@ValueType,@VirtualPin)
+				PRINT 'Inserted into ValueType Table'
+			END
 		END
-		PRINT 'Inserted into Metadata_Tbl'
+
+	--Insert into the Redemption Table
+	BEGIN
+		IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Redemption_Tbl] WHERE VoucherId = @VoucherId)
+		BEGIN
+			INSERT INTO [VoucherzDb].[dbo].[Redemption_Tbl] (VoucherId,RedemptionCount)
+			VALUES (@VoucherId,@RedemptionCount)
+		END
+	END
+	PRINT 'Inserted into Redemption_Tbl'
+
+	--Insert Code configuration details into the metadata table
+	BEGIN
+		IF NOT EXISTS (SELECT VoucherId FROM [dbo].[Metadata_Tbl] WHERE VoucherId = @VoucherId)
+		BEGIN
+			INSERT INTO [VoucherzDb].[dbo].[Metadata_Tbl] (VoucherId,[Length],Charset,Prefix,Suffix,Pattern)
+			VALUES (@VoucherId,@Length,@Charset,@Prefix,@Suffix,@Pattern)
+		END
+	END
+	PRINT 'Inserted into Metadata_Tbl'
 
 	END TRY
 	BEGIN CATCH
 		IF (@@TRANCOUNT > 0)
-			BEGIN
-				ROLLBACK TRANSACTION mysavepoint
-				PRINT 'Transaction was Rolled Back'
-			END
+		BEGIN			
+			ROLLBACK TRANSACTION mysavepoint
+			PRINT 'Transaction was Rolled Back'	
+		END		 
 	END CATCH
 COMMIT
 

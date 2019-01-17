@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[Discount_Tbl]    Script Date: 1/15/2019 10:03:04 PM ******/
+/****** Object:  Table [dbo].[Discount_Tbl]    Script Date: 1/17/2019 9:36:40 AM ******/
 SET ANSI_NULLS ON
 GO
 

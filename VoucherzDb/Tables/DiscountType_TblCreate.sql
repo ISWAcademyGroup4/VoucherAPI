@@ -1,7 +1,7 @@
 USE [VoucherzDb]
 GO
 
-/****** Object:  Table [dbo].[DiscountType_Tbl]    Script Date: 1/15/2019 10:03:15 PM ******/
+/****** Object:  Table [dbo].[DiscountType_Tbl]    Script Date: 1/17/2019 9:36:55 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,3 +18,11 @@ CREATE TABLE [dbo].[DiscountType_Tbl](
 ) ON [PRIMARY]
 GO
 
+INSERT INTO [dbo].[DiscountType_Tbl] (DiscountType) VALUES ('amount')
+GO
+
+INSERT INTO [dbo].[DiscountType_Tbl] (DiscountType) VALUES ('percentage')
+GO
+
+INSERT INTO [dbo].[DiscountType_Tbl] (DiscountType) VALUES ('unit')
+GO
