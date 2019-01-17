@@ -154,9 +154,54 @@ namespace VoucherAPILibrary.Services
                 }
             });
         }
-        public Task<ListVoucherResponse> ListVouchers(string campaign)
+        public Task<object> ListVouchers(string campaign,string MerchantId)
         {
-            throw new NotImplementedException();
+            object obj = null;
+            List<object> voucherlist = new List<object>();
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("campaign", campaign);
+                        parameters.Add("MerchantId", MerchantId);
+
+                        IDataReader reader = await conn.ExecuteReaderAsync("ListVouchersProcedure",parameters,commandType: CommandType.StoredProcedure);
+                       
+                        return obj = new ListVoucherResponse(campaign, GetVoucherResponse.GetListResponse(reader), HttpResponseHandler.GetServiceResponse(200));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    return obj;
+                }
+            });
         }
+        public Task<object> EnableVoucher(string code,string MerchantId)
+        {
+            object obj = null;
+            return Task.Run(async()=> 
+            {
+                try
+                {
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("Code", code);
+                        parameters.Add("MerchantId", MerchantId);
+
+                        await conn.ExecuteAsync("EnableVoucherProcedure", parameters, commandType: CommandType.StoredProcedure);
+                    }
+                    return obj = new EnableResponse(HttpResponseHandler.GetServiceResponse(200));
+                }
+                catch 
+                {
+                    return obj = HttpResponseHandler.GetServiceResponse(500);
+                }
+            });
+        }
+
     }
 }

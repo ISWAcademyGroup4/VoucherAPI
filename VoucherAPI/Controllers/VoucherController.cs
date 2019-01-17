@@ -49,19 +49,19 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet("{Campaign}")]
-        public Task<ListVoucherResponse> ListVouchers(string Campaign, [FromQuery] string Merchant)
+        public Task<object> ListVouchers(string Campaign, [FromQuery] string Merchant)
         {
-            return null;
+            return _voucherService.ListVouchers(Campaign, Merchant);
         }
 
-        //[HttpPost("{Code}")]
-        //public Task<EnableVoucherResponse> EnableVoucher(string Code, [FromQuery] string Merchant)
-        //{
-        //    return null;
-        //}
+        [HttpPost("{Code}")]
+        public Task<object> EnableVoucher(string Code, [FromQuery] string Merchant)
+        {
+            return _voucherService.EnableVoucher(Code, Merchant);
+        }
 
         [HttpPost("{Code}")]
-        public Task<DisableVoucherResponse> DisableVoucher(string Code, [FromQuery] string Merchant)
+        public Task<object> DisableVoucher(string Code, [FromQuery] string Merchant)
         {
             return null;
         }

@@ -80,5 +80,6 @@
     <Build Include="Tables\ValueType_TblCreate.sql" />
     <Build Include="Tables\Voucher_TblCreate.sql" />
     <Build Include="Tables\VoucherType_TblCreate.sql" />
+    <Build Include="StoredProcedures\dbo.ListVouchersProcedure.sql" />
   </ItemGroup>
 </Project>
