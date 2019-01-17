@@ -41,6 +41,9 @@ namespace VoucherAPILibrary.Domain
             CreatedBy = createdBy;
             CreationDate = creationDate;
             VoucherCount = voucherCount;
+
         }
+
+        
     }
 }

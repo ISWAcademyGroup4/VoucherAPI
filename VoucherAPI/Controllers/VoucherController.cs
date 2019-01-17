@@ -32,7 +32,7 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet("{code}")]
-        public Task<GetVoucherResponse> GetVoucher(string code, [FromQuery] string Merchant)
+        public Task<object> GetVoucher(string code, [FromQuery] string Merchant)
         {
             return _voucherService.GetVoucher(code, Merchant);
         }
@@ -55,11 +55,11 @@ namespace VoucherAPI.Controllers
             return null;
         }
 
-        [HttpPost("{Code}")]
-        public Task<EnableVoucherResponse> EnableVoucher(string Code, [FromQuery] string Merchant)
-        {
-            return null;
-        }
+        //[HttpPost("{Code}")]
+        //public Task<EnableVoucherResponse> EnableVoucher(string Code, [FromQuery] string Merchant)
+        //{
+        //    return null;
+        //}
 
         [HttpPost("{Code}")]
         public Task<DisableVoucherResponse> DisableVoucher(string Code, [FromQuery] string Merchant)
@@ -67,23 +67,23 @@ namespace VoucherAPI.Controllers
             return null;
         }
 
-        [HttpPost("{Code}/balance")]
-        public Task<AddGiftBalanceResponse> AddGiftBalance(string Code, [FromQuery] string Merchant)
-        {
-            return null;
-        }
+        //[HttpPost("{Code}/balance")]
+        //public Task<AddGiftBalanceResponse> AddGiftBalance(string Code, [FromQuery] string Merchant)
+        //{
+        //    return null;
+        //}
 
-        [HttpPost]
-        public Task<ImportVouchersResponse> Import(Voucher voucher)
-        {
-            return null;
-        }
+        //[HttpPost]
+        //public Task<ImportVouchersResponse> Import(Voucher voucher)
+        //{
+        //    return null;
+        //}
 
-        [HttpPost]
-        public Task<ImportVouchersCSVResponse> ImportCSV(string CSV)
-        {
-            return null;
-        }
+        //[HttpPost]
+        //public Task<ImportVouchersCSVResponse> ImportCSV(string CSV)
+        //{
+        //    return null;
+        //}
 
     }
 }

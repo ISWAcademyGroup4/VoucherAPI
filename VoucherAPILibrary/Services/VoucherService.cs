@@ -10,6 +10,7 @@ using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Utils;
 using VoucherAPILibrary.Models;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace VoucherAPILibrary.Services
 {
@@ -21,7 +22,8 @@ namespace VoucherAPILibrary.Services
 
         public Task<CreateVoucherResponse> CreateVoucher(Voucher voucher)
         {
-            return Task.Run(async()=> {
+            return Task.Run(async () =>
+            {
 
                 //Generate Random Voucher ID's & Voucher Codes
                 List<string> voucherIdList = new List<string>();
@@ -38,7 +40,7 @@ namespace VoucherAPILibrary.Services
                     using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
-                        
+
                         parameters.Add("VoucherType", voucher.VoucherType);
                         parameters.Add("Campaign", voucher.Campaign);
                         parameters.Add("DiscountType", voucher.Discount.DiscountType);
@@ -78,11 +80,12 @@ namespace VoucherAPILibrary.Services
                 }
             });
         }
-        public Task<GetVoucherResponse> GetVoucher(string voucherCode, string MerchantId)
+        public Task<object> GetVoucher(string voucherCode, string MerchantId)
         {
-            return Task.Run(async () =>
-            {
-                GetVoucherResponse getVoucherResponse = null;
+            var obj = new Object();
+            List<Object> values = null;
+            return Task.Run( async() =>
+            {        
                 try
                 {
                     using (var conn = Connection)
@@ -92,71 +95,14 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("Code", voucherCode);
                         parameters.Add("MerchantId", MerchantId);
 
-                        System.Data.IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                        IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
-                        while (reader.Read())
-                        {
-
-                            getVoucherResponse = new GetVoucherResponse(
-                                reader["Code"].ToString(),
-                                GetEnumValue.GetEnumValueByString<VoucherType>(reader["VoucherType"].ToString()),
-                                reader["Campaign"].ToString(),
-                                new Discount(
-                                    GetEnumValue.GetEnumValueByString<DiscountType>(reader["DiscountType"].ToString()),
-                                    Convert.ToInt32(reader["PercentOff"]),
-                                    Convert.ToInt32(reader["AmountLimit"]),
-                                    Convert.ToInt32(reader["AmountOff"]),
-                                    reader["UnitOff"].ToString()),
-                                new Gift(
-                                    Convert.ToInt32(reader["GiftAmount"]),
-                                    Convert.ToInt32(reader["GiftBalance"])),
-                                new Value(
-                                    Convert.ToInt64(reader["VirtualPin"]),
-                                    GetEnumValue.GetEnumValueByString<Value_Type>(reader["ValueType"].ToString())),
-                                Convert.ToDateTime(reader["StartDate"]),
-                                Convert.ToDateTime(reader["ExpirationDate"]),
-                                new Redemption(
-                                    null,
-                                    Convert.ToInt32(reader["RedemptionCount"]),
-                                    Convert.ToInt32(reader["RedeemedCount"]),
-                                    Convert.ToInt32(reader["RedeemedAmount"]),
-                                    Convert.ToBoolean(reader["isRedeemed"])),
-                                new Metadata(
-                                    Convert.ToInt32(reader["Length"]),
-                                    GetEnumValue.GetEnumValueByString<CharacterSet>(reader["Charset"].ToString()),
-                                    reader["Prefix"].ToString(),
-                                    reader["Suffix"].ToString(),
-                                    reader["Pattern"].ToString()),
-                                    Convert.ToDateTime(reader["CreationDate"].ToString()),
-                                    Convert.ToBoolean(reader["Active"]),
-                                HttpResponseHandler.GetServiceResponse(200));
-
-                            //Customise Response according to Voucher Type
-                            switch (getVoucherResponse.VoucherType)
-                            {
-                                case VoucherType.DiscountVoucher:
-                                    getVoucherResponse.Gift = null;
-                                    getVoucherResponse.Value = null;
-                                    return getVoucherResponse;
-                                case VoucherType.GiftVoucher:
-                                    getVoucherResponse.Discount = null;
-                                    getVoucherResponse.Value = null;
-                                    return getVoucherResponse;
-                                case VoucherType.ValueVoucher:
-                                    getVoucherResponse.Discount = null;
-                                    getVoucherResponse.Gift = null;
-                                    return getVoucherResponse;                                   
-                            }
-
-                            reader.Close(); 
-                        }                     
+                        return GetVoucherResponse.GetResponse(reader);
                     }
-                    return getVoucherResponse;
                 }
                 catch (Exception ex)
                 {
-
-                    return new GetVoucherResponse(HttpResponseHandler.GetServiceResponse(500));
+                    return HttpResponseHandler.GetServiceResponse(500);
                 }
             });
         }
@@ -166,14 +112,14 @@ namespace VoucherAPILibrary.Services
             {
                 try
                 {
-                    using(var conn = Connection)
+                    using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
 
                         parameters.Add("VoucherCode", voucherCode);
                         parameters.Add("ExpirationDate", ExpirationDate);
 
-                        await conn.ExecuteAsync("UpdateVoucherProcedure",parameters,commandType: System.Data.CommandType.StoredProcedure);
+                        await conn.ExecuteAsync("UpdateVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
                         return new UpdateVoucherResponse("Your Voucher was updated Successfully", HttpResponseHandler.GetServiceResponse(202));
                     }
@@ -186,7 +132,7 @@ namespace VoucherAPILibrary.Services
         }
         public Task<DeleteVoucherResponse> DeleteVoucher(string voucherCode)
         {
-            
+
             return Task.Run(async () =>
             {
                 try
@@ -195,7 +141,7 @@ namespace VoucherAPILibrary.Services
                     {
                         DynamicParameters parameters = new DynamicParameters();
                         parameters.Add("VoucherCode", voucherCode);
-                        parameters.Add("DeletionDate", DateTime.Today );
+                        parameters.Add("DeletionDate", DateTime.Today);
 
                         await conn.ExecuteAsync("DeleteVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
                     }
@@ -206,9 +152,9 @@ namespace VoucherAPILibrary.Services
                 {
                     return new DeleteVoucherResponse(HttpResponseHandler.GetServiceResponse(500));
                 }
-            }); 
+            });
         }
-        public Task<ListVoucherResponse> ListVoucher(string campaign)
+        public Task<ListVoucherResponse> ListVouchers(string campaign)
         {
             throw new NotImplementedException();
         }
