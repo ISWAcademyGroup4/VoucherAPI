@@ -7,12 +7,12 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Responses
 {
-    public class EnableResponse
+    public class DisableResponse
     {
-        public string Message = "Voucher was enabled successfully";
+        public string Message = "Voucher was successfully disabled";
         public virtual ServiceResponse ServiceResponse { get; set; }
 
-        public EnableResponse(ServiceResponse serviceResponse)
+        public DisableResponse(ServiceResponse serviceResponse)
         {
             ServiceResponse = serviceResponse ?? throw new ArgumentNullException(nameof(serviceResponse));
         }

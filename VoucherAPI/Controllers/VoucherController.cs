@@ -25,7 +25,7 @@ namespace VoucherAPI.Controllers
 
         
         [HttpPost]
-        public Task<CreateVoucherResponse> CreateVoucher(Voucher voucher)
+        public Task<object> CreateVoucher(Voucher voucher)
         {
             return _voucherService.CreateVoucher(voucher);
         }
@@ -37,13 +37,13 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPut("{Code}")]
-        public Task<UpdateVoucherResponse> UpdateVoucher(string Code, [FromQuery] DateTime ExpirationDate)
+        public Task<object> UpdateVoucher(string Code, [FromQuery] DateTime ExpirationDate)
         {
             return _voucherService.UpdateVoucher(Code, ExpirationDate);
         }
 
         [HttpDelete("{Code}")]
-        public Task<DeleteVoucherResponse> Deletevoucher(string code, [FromQuery] string Merchant)
+        public Task<object> Deletevoucher(string code, [FromQuery] string Merchant)
         {
             return _voucherService.DeleteVoucher(code);
         }
@@ -55,22 +55,22 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPost("{Code}")]
-        public Task<object> EnableVoucher(string Code, [FromQuery] string Merchant)
+        public Task<object> EnableVoucher(string Code, [FromQuery] string e)
         {
-            return _voucherService.EnableVoucher(Code, Merchant);
+            return _voucherService.EnableVoucher(Code, e);
         }
 
         [HttpPost("{Code}")]
-        public Task<object> DisableVoucher(string Code, [FromQuery] string Merchant)
+        public Task<object> DisableVoucher(string Code, [FromQuery] string e)
+        {
+            return _voucherService.DisableVoucher(Code, e);
+        }
+
+        [HttpPost("{Code}/balance")]
+        public Task<object> AddGiftBalance(string Code, [FromQuery] string Merchant)
         {
             return null;
         }
-
-        //[HttpPost("{Code}/balance")]
-        //public Task<AddGiftBalanceResponse> AddGiftBalance(string Code, [FromQuery] string Merchant)
-        //{
-        //    return null;
-        //}
 
         //[HttpPost]
         //public Task<ImportVouchersResponse> Import(Voucher voucher)
