@@ -18,5 +18,7 @@ namespace VoucherAPILibrary.Services
         Task<object> ListVouchers(string campaign, string MerchantId);
         Task<object> EnableVoucher (string code, string MerchantId);
         Task<object> DisableVoucher(string code, string MerchantId);
+        Task<object> AddGiftBalance(string code, string MerchantId, long amount);
+
     }
 }

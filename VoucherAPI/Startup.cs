@@ -29,7 +29,7 @@ namespace VoucherAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<IDbConnection>((sp) => new SqlConnection(this.Configuration.GetConnectionString("VoucherDb")));
+            services.AddTransient<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
             services.AddTransient<IVoucherService, VoucherService>();
         }
 
@@ -44,6 +44,8 @@ namespace VoucherAPI
             {
                 app.UseHsts();
             }
+
+            
 
             app.UseHttpsRedirection();
             app.UseMvc();

@@ -67,19 +67,19 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPost("{Code}/balance")]
-        public Task<object> AddGiftBalance(string Code, [FromQuery] string Merchant)
+        public Task<object> AddGiftBalance(string Code, [FromQuery] string e, [FromQuery] long a)
         {
-            return null;
+            return _voucherService.AddGiftBalance(Code, e, a);
         }
 
         //[HttpPost]
-        //public Task<ImportVouchersResponse> Import(Voucher voucher)
+        //public Task<object> Import(Voucher[] vouchers)
         //{
         //    return null;
         //}
 
         //[HttpPost]
-        //public Task<ImportVouchersCSVResponse> ImportCSV(string CSV)
+        //public Task<object> ImportCSV(HttpPostedFile postedFile)
         //{
         //    return null;
         //}

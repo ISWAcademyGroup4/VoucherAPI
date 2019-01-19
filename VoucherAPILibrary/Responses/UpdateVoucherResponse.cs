@@ -15,7 +15,7 @@ namespace VoucherAPILibrary.Responses
 
         public UpdateVoucherResponse(string Message, ServiceResponse serviceResponse)
         {
-            Message = Message;
+            this.Message = Message;
             ServiceResponse = serviceResponse;
         }
     }

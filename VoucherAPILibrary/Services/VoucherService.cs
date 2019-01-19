@@ -12,13 +12,17 @@ using VoucherAPILibrary.Models;
 using System.Data.SqlClient;
 using System.Data;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace VoucherAPILibrary.Services
 {
     public class VoucherService : DbConfigService, IVoucherService
     {
-        public VoucherService(IConfiguration configuration) : base(configuration)
+        private readonly ILogger<VoucherService> _logger;
+
+        public VoucherService(IConfiguration configuration, ILogger<VoucherService> logger) : base(configuration)
         {
+            _logger = logger;
         }
 
         public Task<object> CreateVoucher(Voucher voucher)
@@ -73,13 +77,34 @@ namespace VoucherAPILibrary.Services
                                 parameters.Add("VoucherId", voucherIdList.ElementAt<string>(i));
                                 parameters.Add("Code", voucherCodeList.ElementAt<string>(i));
 
+                                try
+                                {
+                                    int count = await conn.ExecuteAsync("CreateVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                                    Console.WriteLine(count);
+
+                                    switch (count)
+                                    {
+                                        case 0:
+                                            _logger.LogInformation("Request was not saved into db", new object[] { voucher });
+                                            break;
+                                        case 1:                                           
+                                        case 2:                                           
+                                        case 3:
+                                            _logger.LogInformation("Request was not completely saved into db", new object[] { voucher });
+                                            break;
+                                        case 4:
+                                        case 5:
+                                            _logger.LogInformation("Request was successfully saved into db", new object[] { voucher });
+                                            break;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "Oops, an exception occurred");
+                                }
                                 
-                                int count = await conn.ExecuteAsync("CreateVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
-                                Console.WriteLine(count);
-                               
 
                             }
-
                         }
                     });
                   
@@ -87,8 +112,8 @@ namespace VoucherAPILibrary.Services
                 }
                 catch (Exception ex)
                 {
-
-                    return new CreateVoucherResponse(HttpResponseHandler.GetServiceResponse(500)) as object;
+                    _logger.LogError(ex, "Oops, an exception occurred");   
+                    return HttpResponseHandler.GetServiceResponse(500);
                 }
 
 
@@ -239,6 +264,31 @@ namespace VoucherAPILibrary.Services
 
                 }
                 catch (Exception ex)
+                {
+                    return HttpResponseHandler.GetServiceResponse(500);
+                }
+            });
+        }
+
+        public Task<object> AddGiftBalance(string code, string MerchantId, long amount)
+        {
+            return Task.Run(async () => 
+            {
+                try
+                {
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("code", code);
+                        parameters.Add("MerchantId", MerchantId);
+                        parameters.Add("amount", amount);
+
+                        await conn.ExecuteAsync("AddGiftBalanceProcedure", parameters, commandType: CommandType.StoredProcedure);
+
+                        return new object();
+                    }
+                }
+                catch (Exception exception)
                 {
                     return HttpResponseHandler.GetServiceResponse(500);
                 }
