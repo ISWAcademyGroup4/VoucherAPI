@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VoucherAPILibrary.Services;
+using Steeltoe.Discovery.Client;
 
 namespace VoucherAPI
 {
@@ -31,6 +32,7 @@ namespace VoucherAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
             services.AddTransient<IVoucherService, VoucherService>();
+            services.AddDiscoveryClient(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,10 +47,9 @@ namespace VoucherAPI
                 app.UseHsts();
             }
 
-            
-
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseDiscoveryClient();
         }
     }
 }

@@ -7,20 +7,18 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Responses
 {
-    public class CreateVoucherResponse
+    public class CreateResponse
     {
-        public List<string> Vouchers { get; set; }
-        public string VoucherType { get; set; }
+        public string Message { get; set; }
         public ServiceResponse ServiceResponse { get; set; }
 
-        public CreateVoucherResponse(List<string> vouchers, string voucherType, ServiceResponse serviceResponse)
+        public CreateResponse(string message, ServiceResponse serviceResponse)
         {
-            Vouchers = vouchers;
-            VoucherType = voucherType;      
+            Message = message;      
             ServiceResponse = serviceResponse;
         }
 
-        public CreateVoucherResponse(ServiceResponse serviceResponse)
+        public CreateResponse(ServiceResponse serviceResponse)
         {
             ServiceResponse = serviceResponse;
         }

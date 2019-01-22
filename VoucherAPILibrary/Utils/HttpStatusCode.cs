@@ -65,7 +65,7 @@ namespace VoucherAPILibrary.Utils
         [Description("You have sent too many requests")]
         Too_many_Requests = 429,
 
-        [DefaultValue("Something went wrong")]
+        [DefaultValue("Unable to complete")]
         [Description("An internal API error occurred. Don't worry, we track and verify all such errors and try to react as asap as possible.")]
         Internal_Server_Error = 500,
 

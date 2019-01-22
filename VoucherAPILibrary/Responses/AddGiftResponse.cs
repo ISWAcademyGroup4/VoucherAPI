@@ -7,14 +7,15 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Responses
 {
-    public class EnableResponse
+    public class AddGiftResponse
     {
+
         public virtual string Message { get; set; }
         public virtual ServiceResponse ServiceResponse { get; set; }
 
-        public EnableResponse(string message, ServiceResponse serviceResponse)
+        public AddGiftResponse(string message, ServiceResponse serviceResponse)
         {
-            Message = message ?? "No message from server";
+            Message = message ?? "No message from Server";
             ServiceResponse = serviceResponse ?? throw new ArgumentNullException(nameof(serviceResponse));
         }
     }

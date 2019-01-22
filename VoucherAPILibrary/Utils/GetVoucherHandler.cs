@@ -4,11 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VoucherAPILibrary.Responses;
 using VoucherAPILibrary.Utils;
 
-namespace VoucherAPILibrary.Responses
+namespace VoucherAPILibrary.Utils
 {
-    public class GetVoucherResponse
+    public class GetVoucherHandler
     {
         public static object GetResponse(IDataReader reader)
         {
