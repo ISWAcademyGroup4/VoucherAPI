@@ -9,16 +9,24 @@ using VoucherAPILibrary.Responses;
 
 namespace VoucherAPILibrary.Services
 {
-    public interface IVoucherService
+    public interface IVoucherService<T> 
     {
+
         Task<object> CreateVoucher(Voucher voucher);
-        Task<object> GetVoucher(string voucherCode, string MerchantId);
-        Task<object> UpdateVoucher(string code, DateTime ExpirationDate);
-        Task<object> DeleteVoucher(string voucherCode);
-        Task<object> ListVouchers(string campaign, string MerchantId);
-        Task<object> EnableVoucher (string code, string MerchantId);
-        Task<object> DisableVoucher(string code, string MerchantId);
-        Task<object> AddGiftBalance(string code, string MerchantId, long amount);
+
+        Task<T> GetVoucher(string voucherCode, string MerchantId);
+
+        Task<T> UpdateVoucher(string code, DateTime ExpirationDate);
+
+        Task<T> DeleteVoucher(string voucherCode);
+
+        Task<T> ListVouchers(string campaign, string MerchantId);
+
+        Task<T> EnableVoucher (string code, string MerchantId);
+
+        Task<T> DisableVoucher(string code, string MerchantId);
+
+        Task<T> AddGiftBalance(string code, string MerchantId, long amount);
 
     }
 }

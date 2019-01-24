@@ -10,19 +10,19 @@ namespace VoucherAPILibrary.Utils
     public enum HttpStatusCode
     {
         [DefaultValue("OK")]
-        [Description("The request was successful")]
+        [Description("Your request was successful")]
         OK = 200,
 
-        [DefaultValue("Created")]
-        [Description("Voucher(s) created successfully")]
+        [DefaultValue("Processed")]
+        [Description("Your request was processed successfully")]
         Created = 201,
 
-        [DefaultValue("Redeemed")]
-        [Description("Voucher was redeemed Successfully")]
+        [DefaultValue("Accepted")]
+        [Description("Your request was accepted Successfully")]
         Accepted = 202,
 
         [DefaultValue("No Content")]
-        [Description("No Content was received")]
+        [Description("No Content was received from the server")]
         No_Content = 204,
 
         [DefaultValue("Bad Request")]

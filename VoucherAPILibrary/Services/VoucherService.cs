@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace VoucherAPILibrary.Services
 {
-    public class VoucherService : DbConfigService, IVoucherService
+    public class VoucherService : DbConfigService, IVoucherService<object>
     {
         private readonly ILogger<VoucherService> _logger;
 
@@ -27,7 +27,6 @@ namespace VoucherAPILibrary.Services
 
         public Task<object> CreateVoucher(Voucher voucher)
         {
-            
             return Task.Run(() =>
             {
                 //Generate Random Voucher ID's & Voucher Codes
@@ -118,6 +117,7 @@ namespace VoucherAPILibrary.Services
         public Task<object> GetVoucher(string voucherCode, string MerchantId)
         {
             var obj = new Object();
+            int count = 0;
             return Task.Run( async() =>
             {        
                 try
@@ -130,7 +130,15 @@ namespace VoucherAPILibrary.Services
 
                         IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
-                        return new GetResponse("Your request was processed successfully", Utils.GetVoucherHandler.GetResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
+                        while (reader.Read())
+                        {
+                            count++;
+                        }
+
+                        if (count < 1)  
+                            return new GetResponse("This voucher has been deleted or does not exist", null, HttpResponseHandler.GetServiceResponse(204));
+                        else
+                            return new GetResponse("Your request was processed successfully", Utils.GetVoucherHandler.GetResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
                     }
                 }
                 catch (Exception ex)

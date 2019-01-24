@@ -31,8 +31,9 @@ namespace VoucherAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
-            services.AddTransient<IVoucherService, VoucherService>();
+            services.AddTransient<IVoucherService<object>, VoucherService>();
             services.AddDiscoveryClient(Configuration);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +51,7 @@ namespace VoucherAPI
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseDiscoveryClient();
+            
         }
     }
 }
