@@ -32,7 +32,7 @@ namespace VoucherAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
             services.AddTransient<IVoucherService<object>, VoucherService>();
-            services.AddDiscoveryClient(Configuration);
+            //services.AddDiscoveryClient(Configuration);
             
         }
 
@@ -50,7 +50,7 @@ namespace VoucherAPI
 
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseDiscoveryClient();
+            //app.UseDiscoveryClient();
             
         }
     }

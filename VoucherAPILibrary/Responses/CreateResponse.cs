@@ -10,11 +10,20 @@ namespace VoucherAPILibrary.Responses
     public class CreateResponse
     {
         public string Message { get; set; }
+        public string Campaign { get; set; }
+        public string VoucherType { get; set; }
+        public int Count { get; set; }
+        public string BatchNo { get; set; }
+
         public ServiceResponse ServiceResponse { get; set; }
 
-        public CreateResponse(string message, ServiceResponse serviceResponse)
+        public CreateResponse(string message, string campaign, string voucherType, int count, string batchno, ServiceResponse serviceResponse)
         {
-            Message = message;      
+            Message = message;
+            Campaign = campaign;
+            VoucherType = voucherType;
+            Count = count;
+            BatchNo = batchno;
             ServiceResponse = serviceResponse;
         }
 

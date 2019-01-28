@@ -496,10 +496,11 @@
     <Compile Include="Domain\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\AddGiftResponse.cs" />
+    <Compile Include="Responses\BatchResponse.cs" />
     <Compile Include="Responses\DisableResponse.cs" />
     <Compile Include="Responses\EnableResponse.cs" />
     <Compile Include="Responses\GetResponse.cs" />
-    <Compile Include="Responses\Models\BaseVoucherEntity.cs" />
+    <Compile Include="Responses\Models\VoucherResponseEntity.cs" />
     <Compile Include="Responses\CreateResponse.cs" />
     <Compile Include="Responses\DeleteResponse.cs" />
     <Compile Include="Responses\DisableVoucherResponse.cs" />

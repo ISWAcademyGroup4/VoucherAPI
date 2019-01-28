@@ -35,8 +35,6 @@ namespace VoucherAPI
                 //Flush and stop internal timers and threads before application exit
                 NLog.LogManager.Shutdown();
             }
-
-
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -47,16 +45,16 @@ namespace VoucherAPI
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Trace);
                 })
-                .UseNLog()
-            .ConfigureAppConfiguration((builderContext, configBuilder) => 
-            {
-                var env = builderContext.HostingEnvironment;
-                configBuilder.SetBasePath(env.ContentRootPath)
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                    .AddEnvironmentVariables();
-                    // Add to configuration the Cloudfoundry VCAP settings
-                    //.AddCloudFoundry();
-            });
+                .UseNLog();
+            //.ConfigureAppConfiguration((builderContext, configBuilder) => 
+            //{
+            //    var env = builderContext.HostingEnvironment;
+            //    configBuilder.SetBasePath(env.ContentRootPath)
+            //        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            //        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            //        .AddEnvironmentVariables();
+            //        // Add to configuration the Cloudfoundry VCAP settings
+            //        //.AddCloudFoundry();
+            //});
     }
 }

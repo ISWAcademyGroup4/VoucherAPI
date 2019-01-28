@@ -25,73 +25,74 @@ namespace VoucherAPILibrary.Services
             _logger = logger;
         }
 
-        public Task<object> CreateVoucher(Voucher voucher)
+        public Task<object> Create(Voucher voucher)
         {
             return Task.Run(() =>
             {
-                //Generate Random Voucher ID's & Voucher Codes
-                List<string> voucherIdList = new List<string>();
-                List<string> voucherCodeList = new List<string>();
-
-                for (int i = 0; i < voucher.VoucherCount; i++)
-                {
-                    voucherIdList.Add(IdGenerator.RandomGen(15));
-                    voucherCodeList.Add(CodeGenerator.GetGeneratedCode(voucher.Metadata));
-                }
-
                 try
                 {
-                    DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("VoucherType", voucher.VoucherType);
-                    parameters.Add("Campaign", voucher.Campaign);
-                    parameters.Add("DiscountType", voucher.Discount.DiscountType);
-                    parameters.Add("PercentOff", voucher.Discount.PercentOff);
-                    parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
-                    parameters.Add("AmountOff", voucher.Discount.AmountOff);
-                    parameters.Add("UnitOff", voucher.Discount.UnitOff);
-                    parameters.Add("GiftAmount", voucher.Gift.Amount);
-                    parameters.Add("GiftBalance", voucher.Gift.Balance);
-                    parameters.Add("ValueType", voucher.Value.ValueType);
-                    parameters.Add("VirtualPin", voucher.Value.VirtualPin);
-                    parameters.Add("StartDate", voucher.StartDate);
-                    parameters.Add("ExpirationDate", voucher.ExpirationDate);
-                    parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
-                    parameters.Add("Length", voucher.Metadata.Length);
-                    parameters.Add("Charset", voucher.Metadata.CharSet);
-                    parameters.Add("Prefix", voucher.Metadata.Prefix);
-                    parameters.Add("Suffix", voucher.Metadata.Suffix);
-                    parameters.Add("Pattern", voucher.Metadata.Pattern);
-                    parameters.Add("CreatedBy", voucher.CreatedBy);
-                    parameters.Add("CreationDate", voucher.CreationDate);
+                    var batchno = IdGenerator.RandomGen(6);
+
+                    List<string> voucherIdList = new List<string>();
+                    List<string> voucherCodeList = new List<string>();
+
+                    for (int i = 0; i < voucher.VoucherCount; i++)
+                    {
+                        voucherIdList.Add(IdGenerator.RandomGen(10));
+                        voucherCodeList.Add(CodeGenerator.GetGeneratedCode(voucher.Metadata));
+                    }
 
                     Task.Run(async () =>
                     {
                         using (var conn = Connection)
                         {
+                            DynamicParameters parameters = new DynamicParameters();
+                            parameters.Add("VoucherType", voucher.VoucherType);
+                            parameters.Add("Campaign", voucher.Campaign);
+                            parameters.Add("DiscountType", voucher.Discount.DiscountType);
+                            parameters.Add("PercentOff", voucher.Discount.PercentOff);
+                            parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
+                            parameters.Add("AmountOff", voucher.Discount.AmountOff);
+                            parameters.Add("UnitOff", voucher.Discount.UnitOff);
+                            parameters.Add("GiftAmount", voucher.Gift.Amount);
+                            parameters.Add("GiftBalance", voucher.Gift.Balance);
+                            parameters.Add("ValueType", voucher.Value.ValueType);
+                            parameters.Add("VirtualPin", voucher.Value.VirtualPin);
+                            parameters.Add("StartDate", voucher.StartDate);
+                            parameters.Add("ExpirationDate", voucher.ExpirationDate);
+                            parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
+                            parameters.Add("Length", voucher.Metadata.Length);
+                            parameters.Add("Charset", voucher.Metadata.CharSet);
+                            parameters.Add("Prefix", voucher.Metadata.Prefix);
+                            parameters.Add("Suffix", voucher.Metadata.Suffix);
+                            parameters.Add("Pattern", voucher.Metadata.Pattern);
+                            parameters.Add("CreatedBy", voucher.CreatedBy);
+                            parameters.Add("CreationDate", voucher.CreationDate);
+                            parameters.Add("BatchNo", batchno);
+                            parameters.Add("VoucherCount", voucher.VoucherCount);
 
                             for (int i = 0; i < voucher.VoucherCount; i++)
                             {
-                                parameters.Add("VoucherId", voucherIdList.ElementAt<string>(i));
-                                parameters.Add("Code", voucherCodeList.ElementAt<string>(i));
+                                parameters.Add("VoucherId", voucherIdList.ElementAt(i));
+                                parameters.Add("Code", voucherCodeList.ElementAt(i));
 
                                 try
                                 {
-                                    int count = await conn.ExecuteAsync("CreateVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
-                                    Console.WriteLine(count);
-
+                                    int count = await conn.ExecuteAsync("CreateVoucherProcedure", parameters, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
                                     switch (count)
                                     {
                                         case 0:
                                             _logger.LogInformation("Request was not saved into db", new object[] { voucher });
                                             throw new Exception("Request was not saved into db");
-                                        case 1:                                           
-                                        case 2:                                           
+                                        case 1:
+                                        case 2:
                                         case 3:
                                             _logger.LogInformation("Request was not completely saved into db", new object[] { voucher });
                                             break;
                                         case 4:
                                         case 5:
-                                            _logger.LogInformation(""+voucherCodeList.ElementAt<string>(i)+" was created successfully");
+                                        case 6:
+                                            _logger.LogInformation("" + voucherCodeList.ElementAt<string>(i) + " was created successfully");
                                             break;
                                     }
                                 }
@@ -99,27 +100,26 @@ namespace VoucherAPILibrary.Services
                                 {
                                     _logger.LogError(ex, "Oops, an exception occurred");
                                 }
-                                
-
                             }
                         }
-                    });    
-                    return new CreateResponse("Your request was successfully received and vouchers are being created", HttpResponseHandler.GetServiceResponse(201)) as object;
+                    });
+                    
+
+                    return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(202)) as object;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Oops, an exception occurred");   
-                    return new CreateResponse("Something went wrong",HttpResponseHandler.GetServiceResponse(500));
+                    _logger.LogError(ex, "Oops, an exception occurred");
+                    return HttpResponseHandler.GetServiceResponse(500);
                 }
             });
         }
 
-        public Task<object> GetVoucher(string voucherCode, string MerchantId)
-        {
-            var obj = new Object();
-            int count = 0;
-            return Task.Run( async() =>
-            {        
+        public async Task<object> Get(string voucherCode, string MerchantId)
+        {   
+            return await Task.Run( async() =>
+            {
+                int count = 0;
                 try
                 {
                     using (var conn = Connection)
@@ -128,7 +128,7 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("Code", voucherCode);
                         parameters.Add("MerchantId", MerchantId);
 
-                        IDataReader reader = await conn.ExecuteReaderAsync("GetVoucherProcedure", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                        IDataReader reader = await conn.ExecuteReaderAsync("findbycode", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
                         while (reader.Read())
                         {
@@ -149,9 +149,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> UpdateVoucher(string voucherCode, DateTime ExpirationDate)
+        public async Task<object> Update(string voucherCode, DateTime ExpirationDate)
         {
-            return Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -189,9 +189,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> DeleteVoucher(string voucherCode)
+        public async Task<object> Delete(string voucherCode)
         {
-            return Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -230,10 +230,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> ListVouchers(string campaign,string MerchantId)
-        {
-           
-            return Task.Run(async () =>
+        public async Task<object> List(string campaign,string MerchantId)
+        {          
+            return await Task.Run(async () =>
             {
                 try
                 {
@@ -243,7 +242,7 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("campaign", campaign);
                         parameters.Add("MerchantId", MerchantId);
 
-                        IDataReader reader = await conn.ExecuteReaderAsync("ListVouchersProcedure",parameters,commandType: CommandType.StoredProcedure);
+                        IDataReader reader = await conn.ExecuteReaderAsync("findByCampaign",parameters,commandType: CommandType.StoredProcedure);
                        
                         return new ListVoucherResponse("Retrieved successfully",campaign, GetVoucherHandler.GetListResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
                     }
@@ -256,9 +255,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> EnableVoucher(string code, string MerchantId)
+        public async Task<object> Enable(string code, string MerchantId)
         {
-            return Task.Run(()=> 
+            return await Task.Run(()=> 
             {
                 try
                 {
@@ -296,9 +295,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> DisableVoucher(string code, string MerchantId)
+        public async Task<object> Disable(string code, string MerchantId)
         {
-            return Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -339,9 +338,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public Task<object> AddGiftBalance(string code, string MerchantId, long amount)
+        public async Task<object> AddGiftBalance(string code, string MerchantId, long amount)
         {
-            return Task.Run(() => 
+            return await Task.Run(() => 
             {
                 try
                 {
@@ -376,6 +375,33 @@ namespace VoucherAPILibrary.Services
                 {
                     _logger.LogError(ex, "Oops, an exception occurred");
                     return new AddGiftResponse("Something went wrong", HttpResponseHandler.GetServiceResponse(500));
+                }
+            });
+        }
+
+        public async Task<object> GetBatchCount(string batchno)
+        {
+            return await Task.Run(async() => {
+                try
+                {
+                    int percentage = 0;
+                    using (var conn = Connection)
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("BatchNo", batchno);
+                        parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+
+                        await conn.ExecuteScalarAsync("findByBatchNo", parameters, commandType: CommandType.StoredProcedure);
+
+                        percentage = parameters.Get<int>("ReturnValue");                    
+                    }
+                    _logger.LogInformation("Batch Count was retrieved successfully");
+                    return new BatchResponse(percentage, HttpResponseHandler.GetServiceResponse(200)) as object;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Oops, an exception occurred");
+                    return HttpResponseHandler.GetServiceResponse(500);
                 }
             });
         }

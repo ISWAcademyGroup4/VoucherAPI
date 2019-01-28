@@ -10,7 +10,6 @@ namespace VoucherAPILibrary.Domain
 {
     public class Voucher : BaseEntity<int>
     {
-        public override string VoucherCode { get => base.VoucherCode; set => base.VoucherCode = value; }
         public virtual VoucherType VoucherType { get; set; }
         public override string Campaign { get => base.Campaign; set => base.Campaign = value; }
         public virtual Discount Discount { get; set; }

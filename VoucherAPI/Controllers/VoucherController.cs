@@ -25,51 +25,57 @@ namespace VoucherAPI.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateVoucher(Voucher voucher)
+        public async Task<IActionResult> Create(Voucher voucher)
         {
-            return Created("" ,await _voucherService.CreateVoucher(voucher));        
+            return Accepted("",await _voucherService.Create(voucher));        
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetVoucher(string code, [FromQuery] string Merchant)
+        public async Task<IActionResult> Get(string code, [FromQuery] string Merchant)
         {
-            return Ok(await _voucherService.GetVoucher(code, Merchant));
+            return Ok(await _voucherService.Get(code, Merchant));
         }
 
         [HttpPut("{Code}")]
-        public async Task<IActionResult> UpdateVoucher(string Code, [FromQuery] DateTime ExpirationDate)
+        public async Task<IActionResult> Update(string Code, [FromQuery] DateTime ExpirationDate)
         {
-            return Ok(await _voucherService.UpdateVoucher(Code, ExpirationDate));
+            return Ok(await _voucherService.Update(Code, ExpirationDate));
         }
 
         [HttpDelete("{Code}")]
-        public async Task<IActionResult> Deletevoucher(string code, [FromQuery] string Merchant)
+        public async Task<IActionResult> Delete(string code, [FromQuery] string Merchant)
         {
-            return Ok( await _voucherService.DeleteVoucher(code));
+            return Ok( await _voucherService.Delete(code));
         }
 
         [HttpGet("{Campaign}")]
-        public async Task<IActionResult> ListVouchers(string Campaign, [FromQuery] string Merchant)
+        public async Task<IActionResult> List(string Campaign, [FromQuery] string Merchant)
         {      
-            return Ok(await _voucherService.ListVouchers(Campaign, Merchant));
+            return Ok(await _voucherService.List(Campaign, Merchant));
         }
 
         [HttpPost("{Code}")]
-        public async Task<IActionResult> EnableVoucher(string Code, [FromQuery] string e)
+        public async Task<IActionResult> Enable(string Code, [FromQuery] string e)
         {
-            return Accepted("", await _voucherService.EnableVoucher(Code, e));
+            return Accepted("", await _voucherService.Enable(Code, e));
         }
 
         [HttpPost("{Code}")]
-        public async Task<IActionResult> DisableVoucher(string Code, [FromQuery] string e)
+        public async Task<IActionResult> Disable(string Code, [FromQuery] string e)
         {
-            return Accepted("", await _voucherService.DisableVoucher(Code, e));
+            return Accepted("", await _voucherService.Disable(Code, e));
         }
 
         [HttpPost("{Code}/balance")]
         public async Task<IActionResult> AddGiftBalance(string Code, [FromQuery] string e, [FromQuery] long a)
         {
             return Accepted(await _voucherService.AddGiftBalance(Code, e, a));
+        }
+
+        [HttpGet("{BatchNo}")]
+        public async Task<IActionResult> GetBatchCount(string batchno)
+        {
+            return Ok(await _voucherService.GetBatchCount(batchno));
         }
 
         //[HttpPost]
