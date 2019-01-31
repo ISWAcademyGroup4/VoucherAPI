@@ -21,6 +21,7 @@ namespace VoucherAPILibrary.Domain
         [DataType(DataType.Text, ErrorMessage = "Campaign name must be in text format")]
         public override string Campaign { get => base.Campaign; set => base.Campaign = value; }
 
+        
         public virtual Discount Discount { get; set; }
 
         public virtual Gift Gift { get; set; }
@@ -59,13 +60,13 @@ namespace VoucherAPILibrary.Domain
             VoucherCode = voucherCode;
             VoucherType = voucherType;
             Campaign = campaign;
-            Discount = discount ?? new Discount(0, 0, 0, 0, "");
-            Gift = gift ?? new Gift(0, 0);
-            Value = value ?? new Value(0, 0);
+            Discount = discount ?? new Discount(0, 10, 10, 10, "");
+            Gift = gift ?? new Gift(10, 10);
+            Value = value ?? new Value(10, 0);
             StartDate = startDate;
             ExpirationDate = expirationDate;
-            Redemption = redemption ?? new Redemption(null, 0, 0, 0, false);
-            Metadata = metadata ?? new Metadata(0, 0, "", "", "");
+            Redemption = redemption ?? new Redemption(0);
+            Metadata = metadata;
             CreatedBy = createdBy;
             CreationDate = creationDate;
             VoucherCount = voucherCount;

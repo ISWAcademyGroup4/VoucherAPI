@@ -8,8 +8,8 @@ namespace VoucherAPILibrary.Utils
 {
     public enum VoucherType
     {
-        DiscountVoucher, 
-        GiftVoucher,
-        ValueVoucher
+        Discount, 
+        Gift,
+        Value
     }
 }

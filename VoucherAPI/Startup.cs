@@ -30,10 +30,13 @@ namespace VoucherAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
+            services.AddSingleton<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
             services.AddTransient<IVoucherService<object>, VoucherService>();
             //services.AddDiscoveryClient(Configuration);
+            services.AddCors();
+
             
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,10 +51,21 @@ namespace VoucherAPI
                 app.UseHsts();
             }
 
+            app.UseCors(
+                options => options.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()               
+            );
+
             app.UseHttpsRedirection();
             app.UseMvc();
             //app.UseDiscoveryClient();
+
             
+
+
+
+
         }
     }
 }

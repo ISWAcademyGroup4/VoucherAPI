@@ -98,17 +98,20 @@ namespace VoucherAPILibrary.Services
                                 }
                                 catch (Exception ex)
                                 {
+                                    Console.WriteLine(ex);
                                     _logger.LogError(ex, "Oops, an exception occurred");
+                                    
                                 }
                             }
                         }
                     });
-                    
+
 
                     return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(202)) as object;
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     _logger.LogError(ex, "Oops, an exception occurred");
                     return HttpResponseHandler.GetServiceResponse(500);
                 }
@@ -243,8 +246,9 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("MerchantId", MerchantId);
 
                         IDataReader reader = await conn.ExecuteReaderAsync("findByCampaign",parameters,commandType: CommandType.StoredProcedure);
-                       
-                        return new ListVoucherResponse("Retrieved successfully",campaign, GetVoucherHandler.GetListResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
+
+                        //return new ListVoucherResponse("Retrieved successfully",campaign, GetVoucherHandler.GetListResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
+                        return GetVoucherHandler.GetListResponse(reader) as object;
                     }
                 }
                 catch(Exception ex)
@@ -391,7 +395,7 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("BatchNo", batchno);
                         parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-                        await conn.ExecuteScalarAsync("findByBatchNo", parameters, commandType: CommandType.StoredProcedure);
+                        await conn.ExecuteScalarAsync("getBatchCount", parameters, commandType: CommandType.StoredProcedure);
 
                         percentage = parameters.Get<int>("ReturnValue");                    
                     }

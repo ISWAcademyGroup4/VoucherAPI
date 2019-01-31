@@ -16,15 +16,15 @@ namespace VoucherAPILibrary.Models
         public DiscountType DiscountType { get; set; }
 
         [Int32Validation]
-        [Range(1, 100, ErrorMessage = "Percent Off must be defined as a pecentage")]
+        [Range(0, 100, ErrorMessage = "Percent Off must be defined as a pecentage")]
         public int PercentOff { get; set; }
 
         [Int32Validation]
-        [Range(1, 100000, ErrorMessage = "Amount Limit cannot be more than 100000")]
+        [Range(0, 100000, ErrorMessage = "Amount Limit cannot be more than 100000")]
         public int AmountLimit { get; set; }
 
         [Int32Validation]
-        [Range(1, 100000, ErrorMessage = "Amount off cannot be more than 100000")]
+        [Range(0, 100000, ErrorMessage = "Amount off cannot be more than 100000")]
         public int AmountOff { get; set; }
 
         [MaxLength(50)]

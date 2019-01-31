@@ -276,6 +276,12 @@
     <Reference Include="NLog.Extensions.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.Extensions.Logging.1.4.0\lib\net461\NLog.Extensions.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="NLog.Web.AspNetCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.Web.AspNetCore.4.8.0\lib\net461\NLog.Web.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.5.1.0\lib\net451\RabbitMQ.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Steeltoe.CloudFoundry.ConnectorBase, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Steeltoe.CloudFoundry.ConnectorBase.2.1.3\lib\netstandard2.0\Steeltoe.CloudFoundry.ConnectorBase.dll</HintPath>
     </Reference>
@@ -513,6 +519,7 @@
     <Compile Include="Responses\Models\ValueResponse.cs" />
     <Compile Include="Services\DbConfigService.cs" />
     <Compile Include="Services\IVoucherService.cs" />
+    <Compile Include="Services\RabbitMQService.cs" />
     <Compile Include="Services\VoucherService.cs" />
     <Compile Include="Utils\CharacterSet.cs" />
     <Compile Include="Utils\CodeGenerator.cs" />
@@ -520,7 +527,6 @@
     <Compile Include="Utils\Error.cs" />
     <Compile Include="Utils\ErrorStatusCode.cs" />
     <Compile Include="Utils\GetEnumValue.cs" />
-    <Compile Include="Domain\RedemptionUser.cs" />
     <Compile Include="Utils\GetFromSqlReader.cs" />
     <Compile Include="Utils\GetVoucherHandler.cs" />
     <Compile Include="Utils\HttpServiceResponse.cs" />

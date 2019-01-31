@@ -11,8 +11,8 @@ namespace VoucherAPILibrary.Utils.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            DateTime _dateJoin = Convert.ToDateTime(value);
-            if (_dateJoin >= DateTime.Now)
+            DateTime date = Convert.ToDateTime(value);
+            if (date >= DateTime.Now)
             {
                 return ValidationResult.Success;
             }

@@ -12,6 +12,7 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPI.Controllers
 {
+    //[Authorize]
     [Produces("application/json")]
     [Route("[action]")]
     [ApiController]
@@ -22,6 +23,12 @@ namespace VoucherAPI.Controllers
         public VoucherController(IVoucherService<object> voucherService)
         {
             _voucherService = voucherService;
+        }
+
+        [HttpGet]
+        public string Voucher()
+        {
+            return "Voucher API Service is UP & Running";
         }
         
         [HttpPost]

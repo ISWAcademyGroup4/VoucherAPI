@@ -17,7 +17,7 @@ namespace VoucherAPILibrary.Models
         [Range(1, 5, ErrorMessage = "Redemption count can only be between 1 & 5")]
         public int RedemptionCount { get; set; }
         
-        public Redemption(List<RedemptionUser> redemptionUserList, int redemptionCount, int redeemedCount, int redeemedAmount, bool isRedeemed)
+        public Redemption(int redemptionCount)
         {
             RedemptionCount = redemptionCount;
         }

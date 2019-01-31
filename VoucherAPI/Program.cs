@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using RabbitMQ.Client;
 
 namespace VoucherAPI
 {
@@ -16,12 +17,17 @@ namespace VoucherAPI
         public static void Main(string[] args)
         {
             //CreateWebHostBuilder(args).Build().Run();
+
+            
+
             //Setup NLog to catch all errors
-            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            
             try
             {
                 logger.Debug("init main");
                 CreateWebHostBuilder(args).Build().Run();
+                
 
             }
             catch (Exception ex)
@@ -35,6 +41,8 @@ namespace VoucherAPI
                 //Flush and stop internal timers and threads before application exit
                 NLog.LogManager.Shutdown();
             }
+
+
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

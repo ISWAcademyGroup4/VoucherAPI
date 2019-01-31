@@ -9,37 +9,35 @@ namespace VoucherAPILibrary.Responses
 {
     public class ValueResponse : BaseVoucherEntity
     {
-        public override string Code { get => base.Code; set => base.Code = value; }
-        public override string Campaign { get => base.Campaign; set => base.Campaign = value; }
-        public override string VoucherType { get => base.VoucherType; set => base.VoucherType = value; }
+        public override string voucherCode { get => base.voucherCode; set => base.voucherCode = value; }
+        public override string campaignName { get => base.campaignName; set => base.campaignName = value; }
+        public override string type { get => base.type; set => base.type = value; }
         public virtual string ValueType { get; set; }
         public virtual long VirtualPin { get; set; }
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
         public override int RedeemedCount { get => base.RedeemedCount; set => base.RedeemedCount = value; }
-        public override bool isRedeemed { get => base.isRedeemed; set => base.isRedeemed = value; }
+        public override bool redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
         public override decimal RedeemedAmount { get => base.RedeemedAmount; set => base.RedeemedAmount = value; }
         public override DateTime StartDate { get => base.StartDate; set => base.StartDate = value; }
-        public override DateTime ExpirationDate { get => base.ExpirationDate; set => base.ExpirationDate = value; }
-        public override bool Active { get => base.Active; set => base.Active = value; }
-        public override DateTime CreationDate { get => base.CreationDate; set => base.CreationDate = value; }
-        public override ServiceResponse ServiceResponse { get => base.ServiceResponse; set => base.ServiceResponse = value; }
-
-        public ValueResponse(string code, string campaign, string voucherType, string valueType, long virtualpin, int redemptionCount, int redeemedCount, bool isRedeemed, decimal redeemedAmount, DateTime startDate, DateTime expirationDate, bool active, DateTime creationDate, ServiceResponse serviceResponse)
+        public override DateTime expiryDate { get => base.expiryDate; set => base.expiryDate = value; }
+        public override bool status { get => base.status; set => base.status = value; }
+        public override DateTime dateCreated { get => base.dateCreated; set => base.dateCreated = value; }
+        
+        public ValueResponse(string code, string campaign, string voucherType, string valueType, long virtualpin, int redemptionCount, int redeemedCount, bool isRedeemed, decimal redeemedAmount, DateTime startDate, DateTime expirationDate, bool active, DateTime creationDate)
         {
-            Code = code ?? throw new ArgumentNullException(nameof(code));
-            Campaign = campaign ?? throw new ArgumentNullException(nameof(campaign));
-            VoucherType = voucherType ?? throw new ArgumentNullException(nameof(voucherType));
+            voucherCode = code ?? throw new ArgumentNullException(nameof(code));
+            campaignName = campaign ?? throw new ArgumentNullException(nameof(campaign));
+            type = voucherType ?? throw new ArgumentNullException(nameof(voucherType));
             ValueType = valueType ?? throw new ArgumentNullException(nameof(valueType));
             VirtualPin = virtualpin;
             RedemptionCount = redemptionCount;
             RedeemedCount = redeemedCount;
-            this.isRedeemed = isRedeemed;
+            redemptionStatus = isRedeemed;
             RedeemedAmount = redeemedAmount;
             StartDate = startDate;
-            ExpirationDate = expirationDate;
-            Active = active;
-            CreationDate = creationDate;
-            ServiceResponse = serviceResponse ?? throw new ArgumentNullException(nameof(serviceResponse));
+            expiryDate = expirationDate;
+            status = active;
+            dateCreated = creationDate;
         }
     }
 }
