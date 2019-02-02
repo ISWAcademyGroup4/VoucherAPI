@@ -15,7 +15,7 @@ namespace VoucherAPILibrary.Models
         [Required]
         [Int32Validation(ErrorMessage = "Redemption count must be a number")]
         [Range(1, 5, ErrorMessage = "Redemption count can only be between 1 & 5")]
-        public int RedemptionCount { get; set; }
+        public int RedemptionCount = 1;
         
         public Redemption(int redemptionCount)
         {

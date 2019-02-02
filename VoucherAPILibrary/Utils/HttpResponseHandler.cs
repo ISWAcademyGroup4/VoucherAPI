@@ -12,15 +12,6 @@ namespace VoucherAPILibrary.Utils
     public class HttpResponseHandler
     {
        
-        public static HttpServiceResponse GetHttpServiceResponse(int ResponseCode)
-        {
-            var statusCode = GetEnumValue.GetStatusResponse<HttpStatusCode>(ResponseCode);
-            var message = GetEnumValue.GetMessage<HttpStatusCode>(statusCode);
-            var description = GetEnumValue.GetDescription<HttpStatusCode>(statusCode);
-
-            return new HttpServiceResponse(statusCode,message,description);
-        }
-
         public static ServiceResponse GetServiceResponse(int ResponseCode)
         {
             var statusCode = GetEnumValue.GetStatusResponse<HttpStatusCode>(ResponseCode);

@@ -48,14 +48,16 @@ namespace VoucherAPILibrary.Domain
 
         [Required]
         [DataType(DataType.DateTime, ErrorMessage = "Invalid Date Created")]
-        [MyDate(ErrorMessage = "Back date entry not allowed")]
+        //[MyDate(ErrorMessage = "Back date entry not allowed")]
         public virtual DateTime CreationDate { get; set; }
 
+
+
         [Required]
-        [Range(0, 1000000, ErrorMessage = "Must be within 0 & 1000000")]
+        [Range(1, 1000000, ErrorMessage = "Must be within 1 & 1000000")]
         public virtual int VoucherCount { get; set; }
 
-        public Voucher(string voucherCode, VoucherType voucherType, string campaign, Discount discount, Gift gift, Value value, DateTime startDate, DateTime expirationDate, Redemption redemption, Metadata metadata, string createdBy, DateTime creationDate, int voucherCount)
+        public Voucher(string voucherCode, VoucherType voucherType, string campaign, Discount discount, Gift gift, Value value, DateTime startDate, DateTime expirationDate, Redemption redemption, Metadata metadata, string createdBy, int voucherCount)
         {
             VoucherCode = voucherCode;
             VoucherType = voucherType;
@@ -68,8 +70,9 @@ namespace VoucherAPILibrary.Domain
             Redemption = redemption ?? new Redemption(0);
             Metadata = metadata;
             CreatedBy = createdBy;
-            CreationDate = creationDate;
+            CreationDate = DateTime.Now;
             VoucherCount = voucherCount;
+            
         }
 
         

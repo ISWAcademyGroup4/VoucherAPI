@@ -16,14 +16,15 @@ namespace VoucherAPILibrary.Responses
         public virtual long VirtualPin { get; set; }
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
         public override int RedeemedCount { get => base.RedeemedCount; set => base.RedeemedCount = value; }
-        public override bool redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
+        public override string redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
         public override decimal RedeemedAmount { get => base.RedeemedAmount; set => base.RedeemedAmount = value; }
         public override DateTime StartDate { get => base.StartDate; set => base.StartDate = value; }
         public override DateTime expiryDate { get => base.expiryDate; set => base.expiryDate = value; }
         public override bool status { get => base.status; set => base.status = value; }
         public override DateTime dateCreated { get => base.dateCreated; set => base.dateCreated = value; }
         
-        public ValueResponse(string code, string campaign, string voucherType, string valueType, long virtualpin, int redemptionCount, int redeemedCount, bool isRedeemed, decimal redeemedAmount, DateTime startDate, DateTime expirationDate, bool active, DateTime creationDate)
+        public ValueResponse(string code, string campaign, string voucherType, string valueType, long virtualpin, int redemptionCount, 
+            int redeemedCount, bool isRedeemed, decimal redeemedAmount, DateTime startDate, DateTime expirationDate, bool active, DateTime creationDate)
         {
             voucherCode = code ?? throw new ArgumentNullException(nameof(code));
             campaignName = campaign ?? throw new ArgumentNullException(nameof(campaign));
@@ -32,7 +33,17 @@ namespace VoucherAPILibrary.Responses
             VirtualPin = virtualpin;
             RedemptionCount = redemptionCount;
             RedeemedCount = redeemedCount;
-            redemptionStatus = isRedeemed;
+
+            switch (isRedeemed)
+            {
+                case true:
+                    redemptionStatus = "Redeemed";
+                    break;
+                case false:
+                    redemptionStatus = "Not Redeemed";
+                    break;
+            }
+
             RedeemedAmount = redeemedAmount;
             StartDate = startDate;
             expiryDate = expirationDate;

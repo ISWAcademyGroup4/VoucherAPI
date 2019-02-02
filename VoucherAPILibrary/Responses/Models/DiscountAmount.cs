@@ -17,7 +17,7 @@ namespace VoucherAPILibrary.Responses
         public virtual int value { get; set; }
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
         public override int RedeemedCount { get => base.RedeemedCount; set => base.RedeemedCount = value; }
-        public override bool redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
+        public string redemptionStatus { get; set; }
         public override decimal RedeemedAmount { get => base.RedeemedAmount; set => base.RedeemedAmount = value; }
         public string StartDate { get; set; }
         public string expiryDate { get; set; }
@@ -33,7 +33,17 @@ namespace VoucherAPILibrary.Responses
             value = amountOff;
             RedemptionCount = redemptionCount;
             RedeemedCount = redeemedCount;
-            redemptionStatus = isRedeemed;
+
+            switch (isRedeemed)
+            {
+                case true:
+                    redemptionStatus = "Redeemed";
+                    break;
+                case false:
+                    redemptionStatus = "Not Redeemed";
+                    break;
+            }
+            
             RedeemedAmount = redeemedAmount;
             StartDate = String.Format("{0:d/M/yyyy}", startDate);
             expiryDate = String.Format("{0:d/M/yyyy}", expirationDate);

@@ -30,8 +30,8 @@ namespace VoucherAPILibrary.Models
         [StringLength(6, ErrorMessage = "Suffix cannot be more than six (6) characters")]
         public string Suffix { get; set; }
 
-        [Required]
-        [DataType(DataType.Text, ErrorMessage = "Prefix must be in text format")]
+        //[Required]
+        [DataType(DataType.Text, ErrorMessage = "Pattern must be in text format")]
         [MaxLength(20)]
         public string Pattern { get; set; }
 
@@ -41,7 +41,7 @@ namespace VoucherAPILibrary.Models
             CharSet = charSet;
             Prefix = prefix;
             Suffix = suffix;
-            Pattern = pattern;
+            Pattern = pattern ?? "NO DEFINED PATTERN";
         }
     }
 }

@@ -17,14 +17,15 @@ namespace VoucherAPILibrary.Responses
         public virtual long AmountLimit { get; set; }
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
         public override int RedeemedCount { get => base.RedeemedCount; set => base.RedeemedCount = value; }
-        public override bool redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
+        public override string redemptionStatus { get => base.redemptionStatus; set => base.redemptionStatus = value; }
         public override decimal RedeemedAmount { get => base.RedeemedAmount; set => base.RedeemedAmount = value; }
         public override DateTime StartDate { get => base.StartDate; set => base.StartDate = value; }
         public override DateTime expiryDate { get => base.expiryDate; set => base.expiryDate = value; }
         public override bool status { get => base.status; set => base.status = value; }
         public override DateTime dateCreated { get => base.dateCreated; set => base.dateCreated = value; }
 
-        public DiscountPercent(string voucherCode, string campaignName, string type, string discountType, int percentOff, long amountLimit, int redemptionCount, int redeemedCount, bool redemptionStatus, decimal redeemedAmount, DateTime startDate, DateTime expiryDate, bool status, DateTime dateCreated)
+        public DiscountPercent(string voucherCode, string campaignName, string type, string discountType, int percentOff, 
+            long amountLimit, int redemptionCount, int redeemedCount, bool isRedeemed, decimal redeemedAmount, DateTime startDate, DateTime expiryDate, bool status, DateTime dateCreated)
         {
             voucherCode = voucherCode ?? throw new ArgumentNullException(nameof(voucherCode));
             campaignName = campaignName ?? throw new ArgumentNullException(nameof(campaignName));
@@ -34,7 +35,17 @@ namespace VoucherAPILibrary.Responses
             AmountLimit = amountLimit;
             RedemptionCount = redemptionCount;
             RedeemedCount = redeemedCount;
-            this.redemptionStatus = redemptionStatus;
+
+            switch (isRedeemed)
+            {
+                case true:
+                    redemptionStatus = "Redeemed";
+                    break;
+                case false:
+                    redemptionStatus = "Not Redeemed";
+                    break;
+            }
+
             RedeemedAmount = redeemedAmount;
             StartDate = startDate;
             expiryDate = expiryDate;

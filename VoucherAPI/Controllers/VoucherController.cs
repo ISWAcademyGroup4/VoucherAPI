@@ -30,11 +30,11 @@ namespace VoucherAPI.Controllers
         {
             return "Voucher API Service is UP & Running";
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(Voucher voucher)
         {
-            return Accepted("",await _voucherService.Create(voucher));        
+                return Created("", await _voucherService.Create(voucher));
         }
 
         [HttpGet("{code}")]
@@ -52,12 +52,12 @@ namespace VoucherAPI.Controllers
         [HttpDelete("{Code}")]
         public async Task<IActionResult> Delete(string code, [FromQuery] string Merchant)
         {
-            return Ok( await _voucherService.Delete(code));
+            return Ok(await _voucherService.Delete(code));
         }
 
         [HttpGet("{Campaign}")]
         public async Task<IActionResult> List(string Campaign, [FromQuery] string Merchant)
-        {      
+        {
             return Ok(await _voucherService.List(Campaign, Merchant));
         }
 
@@ -85,17 +85,40 @@ namespace VoucherAPI.Controllers
             return Ok(await _voucherService.GetBatchCount(batchno));
         }
 
-        //[HttpPost]
-        //public Task<object> Import(Voucher[] vouchers)
-        //{
-        //    return null;
-        //}
+        [HttpGet("{DiscountType}")]
+        public async Task<IActionResult> GetAllDiscount(DiscountType discountType, [FromQuery] string merchant)
+        {
+            return Ok(await _voucherService.GetAllDiscount(discountType, merchant));
+        }
 
-        //[HttpPost]
-        //public Task<object> ImportCSV(HttpPostedFile postedFile)
-        //{
-        //    return null;
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetAllGift([FromQuery] string Merchant)
+        {
+            return Ok(await _voucherService.GetAllGift(Merchant));
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllValue([FromQuery] string Merchant)
+        {
+            return Ok(await _voucherService.GetAllValue(Merchant));
+        }
+
+        [HttpPost]
+        public Task<IActionResult> Import(Voucher[] vouchers)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public Task<IActionResult> ImportCSV()
+        {
+            return null;
+        }
+
+        [HttpPost("{code}/redeem")]
+        public Task<IActionResult> Redeem(string code, [FromQuery] string Merchant)
+        {
+            return null;
+        }
     }
 }

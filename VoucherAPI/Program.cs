@@ -16,19 +16,12 @@ namespace VoucherAPI
     {
         public static void Main(string[] args)
         {
-            //CreateWebHostBuilder(args).Build().Run();
-
-            
-
             //Setup NLog to catch all errors
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-            
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();  
             try
             {
                 logger.Debug("init main");
                 CreateWebHostBuilder(args).Build().Run();
-                
-
             }
             catch (Exception ex)
             {
@@ -41,18 +34,11 @@ namespace VoucherAPI
                 //Flush and stop internal timers and threads before application exit
                 NLog.LogManager.Shutdown();
             }
-
-
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Trace);
-                })
                 .UseNLog();
             //.ConfigureAppConfiguration((builderContext, configBuilder) => 
             //{

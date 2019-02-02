@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VoucherAPILibrary.Domain;
 using VoucherAPILibrary.Models;
 using VoucherAPILibrary.Responses;
+using VoucherAPILibrary.Utils;
 
 namespace VoucherAPILibrary.Services
 {
@@ -30,5 +31,17 @@ namespace VoucherAPILibrary.Services
 
         Task<T> GetBatchCount(string batchno);
 
+        Task<T> GetAllDiscount(DiscountType discountType, string merchant);
+
+        Task<T> GetAllGift(string Merchant);
+
+        Task<T> GetAllValue(string Merchant);
+
+        Task<T> ImportVouchers();
+
+        Task<T> ImportCSV();
+
+        Task<T> Redeem(string code, string Merchant);
+        
     }
 }

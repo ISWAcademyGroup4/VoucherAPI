@@ -14,7 +14,7 @@ namespace VoucherAPILibrary.Responses
         public virtual string type { get; set; }
         public virtual int RedemptionCount { get; set; }
         public virtual int RedeemedCount { get; set; }
-        public virtual bool redemptionStatus { get; set; }
+        public virtual string redemptionStatus { get; set; }
         public virtual decimal RedeemedAmount { get; set; }
         public virtual DateTime StartDate { get; set; }
         public virtual DateTime expiryDate { get; set; }

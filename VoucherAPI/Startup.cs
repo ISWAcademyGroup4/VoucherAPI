@@ -30,12 +30,16 @@ namespace VoucherAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
-            services.AddTransient<IVoucherService<object>, VoucherService>();
             //services.AddDiscoveryClient(Configuration);
             services.AddCors();
-
+            services.AddSingleton<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
+            services.AddTransient<IVoucherService<object>, VoucherService>();
             
+            
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
 
         }
 
@@ -51,6 +55,8 @@ namespace VoucherAPI
                 app.UseHsts();
             }
 
+            //app.UseDiscoveryClient();
+
             app.UseCors(
                 options => options.AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -59,12 +65,7 @@ namespace VoucherAPI
 
             app.UseHttpsRedirection();
             app.UseMvc();
-            //app.UseDiscoveryClient();
-
             
-
-
-
 
         }
     }
