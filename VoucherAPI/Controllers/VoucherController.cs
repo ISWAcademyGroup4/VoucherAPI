@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,7 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> GetAllValue([FromQuery] string Merchant)
         {
             return Ok(await _voucherService.GetAllValue(Merchant));

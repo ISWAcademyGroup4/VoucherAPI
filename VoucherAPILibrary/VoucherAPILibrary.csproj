@@ -256,6 +256,9 @@
     <Reference Include="Microsoft.Extensions.WebEncoders, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.WebEncoders.2.2.0\lib\netstandard2.0\Microsoft.Extensions.WebEncoders.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.identitymodel.tokens\5.2.0\lib\netstandard1.4\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
@@ -340,6 +343,9 @@
       <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\system.identitymodel.tokens.jwt\5.2.0\lib\netstandard1.4\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
@@ -494,6 +500,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\BaseEntity.cs" />
+    <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\Metadata.cs" />
@@ -507,16 +514,18 @@
     <Compile Include="Responses\EnableResponse.cs" />
     <Compile Include="Responses\GetAllDiscountResponse.cs" />
     <Compile Include="Responses\GetResponse.cs" />
-    <Compile Include="Responses\Models\VoucherResponseEntity.cs" />
+    <Compile Include="Responses\Models\BaseEntity.cs" />
     <Compile Include="Responses\CreateResponse.cs" />
     <Compile Include="Responses\DeleteResponse.cs" />
     <Compile Include="Responses\Models\DiscountPercent.cs" />
     <Compile Include="Responses\Models\DiscountUnit.cs" />
     <Compile Include="Responses\Models\DiscountAmount.cs" />
-    <Compile Include="Responses\Models\GiftResponse.cs" />
+    <Compile Include="Responses\Models\Gift.cs" />
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Responses\UpdateResponse.cs" />
-    <Compile Include="Responses\Models\ValueResponse.cs" />
+    <Compile Include="Responses\Models\Value.cs" />
+    <Compile Include="Security\User.cs" />
+    <Compile Include="Security\ValidateAuthToken.cs" />
     <Compile Include="Services\DbConfigService.cs" />
     <Compile Include="Services\IVoucherService.cs" />
     <Compile Include="Services\MessageBroker.cs" />

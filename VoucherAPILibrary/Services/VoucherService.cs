@@ -89,12 +89,13 @@ namespace VoucherAPILibrary.Services
                                         case 1:
                                         case 2:
                                         case 3:
+                                        case 4:
                                             _logger.LogInformation("Request was not completely saved into db", new object[] { voucher });
                                             break;
-                                        case 4:
                                         case 5:
                                         case 6:
                                         case 7:
+                                            Console.WriteLine("{0} was successfully created at {1}", parameters.Get<string>("Code"), DateTime.Now);
                                             _logger.LogInformation("" + voucherCodeList.ElementAt<string>(i) + " was created successfully");
                                             break;
                                     }
@@ -112,7 +113,7 @@ namespace VoucherAPILibrary.Services
                         }
                     });
 
-                    _messageBroker.Send("User " + voucher.CreatedBy +" requested for " + voucher.VoucherCount + " voucher(s) of Type " + voucher.VoucherType + " ");
+                    //_messageBroker.Send("User " + voucher.CreatedBy +" requested for " + voucher.VoucherCount + " voucher(s) of Type " + voucher.VoucherType + " ");
 
                     return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(202)) as object;
                 }
@@ -128,7 +129,6 @@ namespace VoucherAPILibrary.Services
         {   
             return Task.Run( async() =>
             {
-                int count = 0;
                 try
                 {
                     using (var conn = Connection)
@@ -138,16 +138,8 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("MerchantId", MerchantId);
 
                         IDataReader reader = await conn.ExecuteReaderAsync("findbycode", parameters, commandType: System.Data.CommandType.StoredProcedure);
-
-                        while (reader.Read())
-                        {
-                            count++;
-                        }
-
-                        if (count < 1)  
-                            return new GetResponse("This voucher has been deleted or does not exist", null, HttpResponseHandler.GetServiceResponse(204));
-                        else
-                            return new GetResponse("Your request was processed successfully", Utils.GetVoucherHandler.GetResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
+                                         
+                        return new GetResponse("Your request was processed successfully", GetVoucherHandler.GetResponse(reader), HttpResponseHandler.GetServiceResponse(200)) as object;
                     }
                 }
                 catch (Exception ex)
@@ -305,9 +297,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> Disable(string code, string MerchantId)
+        public Task<object> Disable(string code, string MerchantId)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 try
                 {
@@ -348,9 +340,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> AddGiftBalance(string code, string MerchantId, long amount)
+        public Task<object> AddGiftBalance(string code, string MerchantId, long amount)
         {
-            return await Task.Run(() => 
+            return Task.Run(() => 
             {
                 try
                 {
@@ -389,9 +381,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> GetBatchCount(string batchno)
+        public Task<object> GetBatchCount(string batchno)
         {
-            return await Task.Run(async() => {
+            return Task.Run(async() => {
                 try
                 {
                     int percentage = 0;
@@ -416,25 +408,22 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> GetAllDiscount(DiscountType discountType, string merchant)
+        public Task<object> GetAllDiscount(DiscountType discountType, string merchant)
         {
-            return await Task.Run( async ()=> 
+            return Task.Run( async ()=> 
             {
                 try
                 {
                     using (var conn = Connection)
                     {
                         DynamicParameters parameters = new DynamicParameters();
-                        parameters.Add("DiscountType", discountType);
+                        parameters.Add("DiscountType",(Int32) discountType,DbType.Int32);
                         parameters.Add("Merchant", merchant);
 
                         IDataReader reader = await conn.ExecuteReaderAsync("getAllDiscount", parameters, commandType: CommandType.StoredProcedure);
 
-                        reader.Close();
-                        conn.Close();
-
                         _logger.LogInformation(new EventId(), "Successfully retrieved Discount vouchers of Type " + discountType + "");
-                        _messageBroker.Send("User {" + merchant + "} Successfully retrieved Discount Vouchers of Type " + discountType + "");
+                        //_messageBroker.Send("User {" + merchant + "} Successfully retrieved Discount Vouchers of Type " + discountType + "");
 
                         return GetVoucherHandler.GetListResponse(reader) as object;
                     }              
@@ -447,9 +436,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> GetAllGift(string Merchant)
+        public Task<object> GetAllGift(string Merchant)
         {
-            return await Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
@@ -460,11 +449,8 @@ namespace VoucherAPILibrary.Services
 
                         IDataReader reader = await conn.ExecuteReaderAsync("getAllGift", parameters, commandType: CommandType.StoredProcedure);
 
-                        reader.Close();
-                        conn.Close();
-
                         _logger.LogInformation(new EventId(), "Successfully retrieved Gift vouchers");
-                        _messageBroker.Send("User {" + Merchant + "} Successfully retrieved Gift vouchers");
+                        //_messageBroker.Send("User {" + Merchant + "} Successfully retrieved Gift vouchers");
 
                         return GetVoucherHandler.GetListResponse(reader) as object;
                     }
@@ -477,9 +463,9 @@ namespace VoucherAPILibrary.Services
             });
         }
 
-        public async Task<object> GetAllValue(string Merchant)
+        public Task<object> GetAllValue(string Merchant)
         {
-            return await Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
@@ -489,12 +475,9 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("Merchant", Merchant);
 
                         IDataReader reader = await conn.ExecuteReaderAsync("getAllValue", parameters, commandType: CommandType.StoredProcedure);
-                        
-                        reader.Close();
-                        conn.Close();
 
                         _logger.LogInformation(new EventId(), "Successfully retrieved value vouchers");
-                        _messageBroker.Send("User {" + Merchant + "} Successfully retrieved value vouchers");
+                        //_messageBroker.Send("User {" + Merchant + "} Successfully retrieved value vouchers");
 
                         return GetVoucherHandler.GetListResponse(reader) as object;
                     }
