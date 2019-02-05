@@ -12,25 +12,61 @@ namespace VoucherAPILibrary.Utils
     public class HttpResponseHandler
     {
        
-        public static ServiceResponse GetServiceResponse(int ResponseCode)
+        public static ServiceResponse GetServiceResponse(int Code)
         {
-            var statusCode = GetEnumValue.GetStatusResponse<HttpStatusCode>(ResponseCode);
+            var statusCode = GetEnumValue.GetStatusResponse<HttpStatusCode>(Code);
             var message = GetEnumValue.GetMessage<HttpStatusCode>(statusCode);
             var description = GetEnumValue.GetDescription<HttpStatusCode>(statusCode);
 
-            switch (ResponseCode)
+            switch (Code)
             {
                 case int n when (n < 400):
                     return new ServiceResponse(statusCode, message, description, null );
+
                 case int n when (n >= 400):
                     return new ServiceResponse(statusCode, message, description, null);
-                //default:
-                //    return new ServiceResponse(statusCode, message, description, null);
+
+                default:
+                    break;
             }
 
             return null;
            
         }
+
+        public static ServiceResponse GetServiceResponse(int Code, string message, string description)
+        {
+            var statusCode = GetEnumValue.GetEnumValueByInt<HttpStatusCode>(Code);
+
+            switch (Code)
+            {
+                case int n when (n < 400):
+                    return new ServiceResponse(statusCode, message, description, null);
+
+                case int n when (n > 400):
+                    return new ServiceResponse(statusCode, message, description, null);
+
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        public static ServiceResponse GetServiceResponse(int Code, int errorCode)
+        {
+            var statusCode = GetEnumValue.GetEnumValueByInt<HttpStatusCode>(Code);
+            var message = GetEnumValue.GetMessage<HttpStatusCode>(statusCode);
+            var description = GetEnumValue.GetDescription<HttpStatusCode>(statusCode);
+            var errorStatusCode = GetEnumValue.GetEnumValueByInt<ErrorStatusCode>(errorCode);
+            var errorMessage = GetEnumValue.GetMessage<ErrorStatusCode>(errorStatusCode);
+
+            return new ServiceResponse(statusCode, message, description,
+                new Error(errorStatusCode, errorMessage)
+            );
+        }
+
+
 
     }
 }

@@ -2,8 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RuntimeIdentifiers>win10-x64;</RuntimeIdentifiers>
+    <OutputType>Exe</OutputType> 
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>57fa03b8-79b1-4045-a4d1-7280f968267a</UserSecretsId>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

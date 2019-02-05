@@ -35,7 +35,7 @@ namespace VoucherAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Voucher voucher)
         {
-                return Created("", await _voucherService.Create(voucher));
+            return Created("", await _voucherService.Create(voucher));
         }
 
         [HttpGet("{code}")]

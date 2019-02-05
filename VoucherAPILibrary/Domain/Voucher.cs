@@ -64,7 +64,7 @@ namespace VoucherAPILibrary.Domain
             Campaign = campaign;
             Discount = discount ?? new Discount(0, 10, 10, 10, "");
             Gift = gift ?? new Gift(10, 10);
-            Value = value ?? new Value(10, 0);
+            Value = value ?? new Value(0,"");
             StartDate = startDate;
             ExpirationDate = expirationDate;
             Redemption = redemption ?? new Redemption(0);

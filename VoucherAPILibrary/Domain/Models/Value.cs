@@ -12,15 +12,15 @@ namespace VoucherAPILibrary.Models
     public class Value
     {
         [Int64Validation(ErrorMessage = "input value must be a number")]
-        public long VirtualPin { get; set; }
+        public long Amount { get; set; }
 
-        [EnumDataType(typeof(Value_Type),ErrorMessage = "Must be a defned value type voucher")]
-        public Value_Type ValueType {get;set;}
+        [DataType(DataType.Text, ErrorMessage = "Value voucher specification must be of Text Format")]
+        public string ValueSpec {get;set;}
 
-        public Value(long virtualPin, Value_Type valueType)
+        public Value(long amount, string valueSpec)
         {
-            VirtualPin = virtualPin;
-            ValueType = valueType;
+            Amount = amount;
+            ValueSpec = valueSpec;
         }
     }
 }

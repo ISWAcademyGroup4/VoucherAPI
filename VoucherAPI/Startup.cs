@@ -18,6 +18,7 @@ using static VoucherAPILibrary.Helpers.AppSettings;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using VoucherAPILibrary.Messaging;
 
 namespace VoucherAPI
 {
@@ -33,6 +34,7 @@ namespace VoucherAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var appSettingsSection = Configuration.GetSection("AuthSettings");
@@ -60,15 +62,10 @@ namespace VoucherAPI
 
             //services.AddDiscoveryClient(Configuration);
             services.AddCors();
-            services.AddSingleton<IDbConnection>((sp) => new SqlConnection(Configuration.GetConnectionString("VoucherDb")));
+            
             services.AddTransient<IVoucherService<object>, VoucherService>();
+            services.AddTransient<MessageBroker, MessageBroker>();
             
-            
-            //services.Configure<ApiBehaviorOptions>(options =>
-            //{
-            //    options.SuppressModelStateInvalidFilter = true;
-            //});
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,10 +82,10 @@ namespace VoucherAPI
 
             //app.UseDiscoveryClient();
 
-            app.UseCors(
-                options => options.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()               
+            app.UseCors(options => options
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()               
             );
 
             app.UseAuthentication();

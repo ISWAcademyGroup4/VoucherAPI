@@ -501,11 +501,12 @@
   <ItemGroup>
     <Compile Include="Domain\BaseEntity.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
-    <Compile Include="Models\Discount.cs" />
-    <Compile Include="Models\Gift.cs" />
-    <Compile Include="Models\Metadata.cs" />
-    <Compile Include="Models\Redemption.cs" />
-    <Compile Include="Models\Value.cs" />
+    <Compile Include="Messaging\CustomMessage.cs" />
+    <Compile Include="Domain\Models\Discount.cs" />
+    <Compile Include="Domain\Models\Gift.cs" />
+    <Compile Include="Domain\Models\Metadata.cs" />
+    <Compile Include="Domain\Models\Redemption.cs" />
+    <Compile Include="Domain\Models\Value.cs" />
     <Compile Include="Domain\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\AddGiftResponse.cs" />
@@ -526,9 +527,9 @@
     <Compile Include="Responses\Models\Value.cs" />
     <Compile Include="Security\User.cs" />
     <Compile Include="Security\ValidateAuthToken.cs" />
+    <Compile Include="Messaging\MessageBroker.cs" />
     <Compile Include="Services\DbConfigService.cs" />
     <Compile Include="Services\IVoucherService.cs" />
-    <Compile Include="Services\MessageBroker.cs" />
     <Compile Include="Services\VoucherService.cs" />
     <Compile Include="Utils\Enum\CharacterSet.cs" />
     <Compile Include="Utils\CodeGenerator.cs" />
@@ -539,7 +540,6 @@
     <Compile Include="Utils\GetFromSqlReader.cs" />
     <Compile Include="Utils\GetVoucherHandler.cs" />
     <Compile Include="Utils\HttpStatusCode.cs" />
-    <Compile Include="Utils\JsonResponseSerializer.cs" />
     <Compile Include="Utils\ServiceResponse.cs" />
     <Compile Include="Utils\IdGenerator.cs" />
     <Compile Include="Utils\HttpResponseHandler.cs" />

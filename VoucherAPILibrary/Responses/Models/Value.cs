@@ -15,9 +15,9 @@ namespace VoucherAPILibrary.Responses
 
         public override string Type { get => base.Type; set => base.Type = value; }
 
-        public virtual string ValueType { get; set; }
+        public virtual string ValueSpec { get; set; }
 
-        public virtual long VirtualPin { get; set; }
+        public virtual long Amount { get; set; }
 
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
 
@@ -39,8 +39,8 @@ namespace VoucherAPILibrary.Responses
             string code, 
             string campaign, 
             string voucherType, 
-            string valueType, 
-            long virtualpin, 
+            string valueSpec, 
+            long amount, 
             int redemptionCount, 
             int redeemedCount, 
             bool isRedeemed, 
@@ -53,8 +53,8 @@ namespace VoucherAPILibrary.Responses
             VoucherCode = code ?? throw new ArgumentNullException(nameof(code));
             CampaignName = campaign ?? throw new ArgumentNullException(nameof(campaign));
             Type = voucherType ?? throw new ArgumentNullException(nameof(voucherType));
-            ValueType = valueType ?? throw new ArgumentNullException(nameof(valueType));
-            VirtualPin = virtualpin;
+            ValueSpec = valueSpec ?? throw new ArgumentNullException(nameof(valueSpec));
+            Amount = amount;
             RedemptionCount = redemptionCount;
             RedeemedCount = redeemedCount;
 

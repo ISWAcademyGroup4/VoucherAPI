@@ -10,9 +10,8 @@ namespace VoucherAPILibrary.Utils
     public enum ErrorStatusCode
     {
 
-        [DefaultValue("")]
-        [Description("")]
-        resource_not_found,
+        [DefaultValue("Voucher already exists")]
+        Already_Exists = 8890,
 
         [DefaultValue("")]
         [Description("")]

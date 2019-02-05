@@ -75,8 +75,7 @@ namespace VoucherAPILibrary.Utils
         }
 
         public static string GetMessage<T>(this T enumValue) where T : struct, IConvertible
-        {
-            
+        {          
             if (typeof(T).IsEnum)
             {
                 Array values = Enum.GetValues(typeof(T));

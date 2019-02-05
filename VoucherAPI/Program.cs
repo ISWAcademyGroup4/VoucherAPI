@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace VoucherAPI
     {
         public static void Main(string[] args)
         {
+            
+
             //Setup NLog to catch all errors
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();  
             try
@@ -38,17 +41,15 @@ namespace VoucherAPI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseNLog();
-            //.ConfigureAppConfiguration((builderContext, configBuilder) => 
-            //{
-            //    var env = builderContext.HostingEnvironment;
-            //    configBuilder.SetBasePath(env.ContentRootPath)
-            //        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            //        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            //        .AddEnvironmentVariables();
-            //        // Add to configuration the Cloudfoundry VCAP settings
-            //        //.AddCloudFoundry();
-            //});
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddEventSourceLogger();
+                })
+                .ConfigureAppConfiguration((builderContext, configBuilder) =>
+                {
+
+                })     
+                .UseStartup<Startup>().UseNLog()
+            .UseUrls("https://172.20.20.23:5001","http://172.20.20.23:5000");
     }
 }
