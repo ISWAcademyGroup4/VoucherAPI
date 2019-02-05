@@ -116,8 +116,8 @@ namespace VoucherAPILibrary.Services
                     });
 
                    
-
-                    _messageBroker.PublishMessage("Connection Established");
+                    Thread messageThread = new Thread(()=>_messageBroker.PublishMessage(new CustomMessage("USER "+voucher.CreatedBy+" created "+voucher.VoucherCount+" vouchers","USER","CREATE",String.Format("{0:d/m/yyyy}",DateTime.Now))));
+                    messageThread.Start();
 
                     return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(202)) as object;
                 }

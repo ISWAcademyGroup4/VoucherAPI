@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using VoucherAPILibrary.Messaging;
+
 
 namespace VoucherAPILibrary.Messaging
 {
@@ -26,7 +30,7 @@ namespace VoucherAPILibrary.Messaging
                 config.GetSection("RabbitMqConnection").Bind(factory);
         }
 
-        public void PublishMessage(string message)
+        public void PublishMessage(CustomMessage customMessage)
         {
             using (var conn = factory.CreateConnection())
             {
@@ -37,7 +41,9 @@ namespace VoucherAPILibrary.Messaging
                     Channel.QueueDeclare(QUEUENAME, true, false, false, null);
                     Channel.QueueBind(QUEUENAME, EXCHANGENAME, ROUTING_KEY);
 
-                    byte[] bytes = Encoding.ASCII.GetBytes(message);
+                    
+                    var message = JsonConvert.SerializeObject(customMessage);
+                    var bytes = Encoding.ASCII.GetBytes(message);
                     Channel.BasicPublish(EXCHANGENAME, ROUTING_KEY, null, bytes);
                 }
             }
