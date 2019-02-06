@@ -192,7 +192,7 @@ namespace VoucherAPILibrary.Utils
                 Enum.Parse(typeof(VoucherType), 
                 reader["VoucherType"].ToString()).ToString(), 
                 reader["ValueSpec"].ToString(),
-                (long)reader["Amount"], 
+                (decimal)reader["Amount"], 
                 Convert.ToInt32(reader["RedemptionCount"]), 
                 Convert.ToInt32(reader["RedeemedCount"]), 
                 (bool)reader["isRedeemed"], 

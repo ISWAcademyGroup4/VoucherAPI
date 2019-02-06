@@ -45,15 +45,15 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPut("{Code}")]
-        public async Task<IActionResult> Update(string Code, [FromQuery] DateTime ExpirationDate)
+        public async Task<IActionResult> Update(string Code, [FromQuery] string Merchant, [FromQuery] DateTime ExpirationDate)
         {
-            return Ok(await _voucherService.Update(Code, ExpirationDate));
+            return Ok(await _voucherService.Update(Code, Merchant, ExpirationDate));
         }
 
         [HttpDelete("{Code}")]
         public async Task<IActionResult> Delete(string code, [FromQuery] string Merchant)
         {
-            return Ok(await _voucherService.Delete(code));
+            return Ok(await _voucherService.Delete(code,Merchant));
         }
 
         [HttpGet("{Campaign}")]
@@ -63,21 +63,21 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPost("{Code}")]
-        public async Task<IActionResult> Enable(string Code, [FromQuery] string e)
+        public async Task<IActionResult> Enable(string Code, [FromQuery] string Merchant)
         {
-            return Accepted("", await _voucherService.Enable(Code, e));
+            return Accepted("", await _voucherService.Enable(Code, Merchant));
         }
 
         [HttpPost("{Code}")]
-        public async Task<IActionResult> Disable(string Code, [FromQuery] string e)
+        public async Task<IActionResult> Disable(string Code, [FromQuery] string Merchant)
         {
-            return Accepted("", await _voucherService.Disable(Code, e));
+            return Accepted("", await _voucherService.Disable(Code, Merchant));
         }
 
         [HttpPost("{Code}/balance")]
-        public async Task<IActionResult> AddGiftBalance(string Code, [FromQuery] string e, [FromQuery] long a)
+        public async Task<IActionResult> AddGiftBalance(string Code, [FromQuery] string merchant, [FromQuery] long amount)
         {
-            return Accepted(await _voucherService.AddGiftBalance(Code, e, a));
+            return Accepted(await _voucherService.AddGiftBalance(Code, merchant, amount));
         }
 
         [HttpGet("{BatchNo}")]
@@ -86,8 +86,20 @@ namespace VoucherAPI.Controllers
             return Ok(await _voucherService.GetBatchCount(batchno));
         }
 
-        [HttpGet("{DiscountType}")]
-        public async Task<IActionResult> GetAllDiscount(DiscountType discountType, [FromQuery] string merchant)
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] string Merchant)
+        {
+            return Ok(await _voucherService.GetAll(Merchant));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllDiscount([FromQuery] string Merchant)
+        {
+            return Ok(await _voucherService.GetAllDiscount(Merchant));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllDiscount([FromQuery] DiscountType discountType, [FromQuery] string merchant)
         {
             return Ok(await _voucherService.GetAllDiscount(discountType, merchant));
         }
@@ -118,9 +130,9 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpPost("{code}/redeem")]
-        public Task<IActionResult> Redeem(string code, [FromQuery] string Merchant)
+        public async Task<IActionResult> Redeem(string code, Redeem redeem)
         {
-            return null;
+            return Ok(await _voucherService.Redeem(code, redeem));
         }
     }
 }

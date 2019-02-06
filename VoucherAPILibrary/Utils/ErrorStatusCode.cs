@@ -11,15 +11,13 @@ namespace VoucherAPILibrary.Utils
     {
 
         [DefaultValue("Voucher already exists")]
-        Already_Exists = 8890,
+        Already_Exists = 900,
 
-        [DefaultValue("")]
-        [Description("")]
-        voucher_not_active,
+        [DefaultValue("Voucher does not exist")]
+        voucher_not_exists = 901,
 
-        [DefaultValue("")]
-        [Description("")]
-        voucher_expired,
+        [DefaultValue("Voucher has already been redeemed")]
+        voucher_expired = 909,
 
         [DefaultValue("")]
         [Description("")]

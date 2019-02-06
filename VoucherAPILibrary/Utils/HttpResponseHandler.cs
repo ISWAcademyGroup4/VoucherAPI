@@ -62,7 +62,7 @@ namespace VoucherAPILibrary.Utils
             var errorMessage = GetEnumValue.GetMessage<ErrorStatusCode>(errorStatusCode);
 
             return new ServiceResponse(statusCode, message, description,
-                new Error(errorStatusCode, errorMessage)
+                ErrorResponseHandler.GetErrorResponse(errorCode)
             );
         }
 

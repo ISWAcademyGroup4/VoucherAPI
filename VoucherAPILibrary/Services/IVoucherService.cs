@@ -17,9 +17,9 @@ namespace VoucherAPILibrary.Services
 
         Task<T> Get(string voucherCode, string MerchantId);
 
-        Task<T> Update(string code, DateTime ExpirationDate);
+        Task<T> Update(string code, string Mercahnt, DateTime ExpirationDate);
 
-        Task<T> Delete(string voucherCode);
+        Task<T> Delete(string voucherCode, string Merchant);
 
         Task<T> List(string campaign, string MerchantId);
 
@@ -27,9 +27,13 @@ namespace VoucherAPILibrary.Services
 
         Task<T> Disable(string code, string MerchantId);
 
-        Task<T> AddGiftBalance(string code, string MerchantId, long amount);
+        Task<T> AddGiftBalance(string code, string Merchant, long amount);
 
         Task<T> GetBatchCount(string batchno);
+
+        Task<T> GetAll(string Merchant);
+
+        Task<T> GetAllDiscount(string merchant);
 
         Task<T> GetAllDiscount(DiscountType discountType, string merchant);
 
@@ -41,7 +45,7 @@ namespace VoucherAPILibrary.Services
 
         Task<T> ImportCSV();
 
-        Task<T> Redeem(string code, string Merchant);
+        Task<T> Redeem(string code, Redeem redeem);
         
     }
 }

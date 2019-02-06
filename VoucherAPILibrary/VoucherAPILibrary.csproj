@@ -500,6 +500,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\BaseEntity.cs" />
+    <Compile Include="Domain\Redeem.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Messaging\CustomMessage.cs" />
     <Compile Include="Domain\Models\Discount.cs" />
@@ -523,6 +524,7 @@
     <Compile Include="Responses\Models\DiscountAmount.cs" />
     <Compile Include="Responses\Models\Gift.cs" />
     <Compile Include="Responses\ListResponse.cs" />
+    <Compile Include="Responses\redeemResponse.cs" />
     <Compile Include="Responses\UpdateResponse.cs" />
     <Compile Include="Responses\Models\Value.cs" />
     <Compile Include="Security\User.cs" />
@@ -535,6 +537,7 @@
     <Compile Include="Utils\CodeGenerator.cs" />
     <Compile Include="Utils\Enum\DiscountType.cs" />
     <Compile Include="Utils\Error.cs" />
+    <Compile Include="Utils\ErrorResponseHandler.cs" />
     <Compile Include="Utils\ErrorStatusCode.cs" />
     <Compile Include="Utils\GetEnumValue.cs" />
     <Compile Include="Utils\GetFromSqlReader.cs" />

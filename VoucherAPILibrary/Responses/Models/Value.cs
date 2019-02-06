@@ -17,7 +17,7 @@ namespace VoucherAPILibrary.Responses
 
         public virtual string ValueSpec { get; set; }
 
-        public virtual long Amount { get; set; }
+        public virtual decimal Amount { get; set; }
 
         public override int RedemptionCount { get => base.RedemptionCount; set => base.RedemptionCount = value; }
 
@@ -40,7 +40,7 @@ namespace VoucherAPILibrary.Responses
             string campaign, 
             string voucherType, 
             string valueSpec, 
-            long amount, 
+            decimal amount, 
             int redemptionCount, 
             int redeemedCount, 
             bool isRedeemed, 
