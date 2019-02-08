@@ -11,9 +11,9 @@ namespace VoucherAPILibrary.Utils
         public HttpStatusCode ResponseCode { get; set; }
         public string ResponseMessage { get; set; }
         public string Description { get; set; }
-        public List<Error> Errors { get; set; }
+        public Error Errors { get; set; }
 
-        public ServiceResponse(HttpStatusCode responseCode, string responseMessage, string description, List<Error> errors)
+        public ServiceResponse(HttpStatusCode responseCode, string responseMessage, string description, Error errors)
         {
             ResponseCode = responseCode;
             ResponseMessage = responseMessage ?? throw new ArgumentNullException(nameof(responseMessage));

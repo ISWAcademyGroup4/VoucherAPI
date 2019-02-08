@@ -1,0 +1,21 @@
+USE [VoucherzDb]
+GO
+
+/****** Object:  Table [dbo].[Campaign_Tbl]    Script Date: 1/15/2019 10:02:41 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Campaign_Tbl](
+	[Id] [int] IDENTITY(0,1) NOT NULL,
+	[Campaign] [varchar](50) NOT NULL,
+ [MerchantId] VARCHAR(MAX) NOT NULL, 
+    CONSTRAINT [PK_Campaign_Tbl] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
