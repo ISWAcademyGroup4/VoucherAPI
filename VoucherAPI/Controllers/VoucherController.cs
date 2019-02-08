@@ -13,7 +13,7 @@ using VoucherAPILibrary.Utils;
 
 namespace VoucherAPI.Controllers
 {
-    //[Authorize]
+    //[AllowAnonymous]
     [Produces("application/json")]
     [Route("[action]")]
     [ApiController]
@@ -99,7 +99,7 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllDiscount([FromQuery] DiscountType discountType, [FromQuery] string merchant)
+        public async Task<IActionResult> GetDiscount([FromQuery] DiscountType discountType, [FromQuery] string merchant)
         {
             return Ok(await _voucherService.GetAllDiscount(discountType, merchant));
         }
@@ -111,9 +111,9 @@ namespace VoucherAPI.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "User")]
         public async Task<IActionResult> GetAllValue([FromQuery] string Merchant)
         {
+            
             return Ok(await _voucherService.GetAllValue(Merchant));
         }
 
