@@ -55,7 +55,7 @@ namespace VoucherAPILibrary.Utils
             {
                 case CharacterSet.Numeric:
                     return code = metadata.Prefix + GenerateNumeric(codeLength) + metadata.Suffix;
-                case CharacterSet.Alphabetic:
+                case CharacterSet.Alphabet:
                     return code = metadata.Prefix + GenerateAlphabetic(codeLength) + metadata.Suffix;
                 case CharacterSet.Alphanumeric:
                     return code = metadata.Prefix + GenerateAlphaNumeric(codeLength) + metadata.Suffix;

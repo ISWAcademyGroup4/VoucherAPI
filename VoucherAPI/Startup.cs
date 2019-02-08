@@ -19,6 +19,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using VoucherAPILibrary.Messaging;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace VoucherAPI
 {
@@ -34,38 +35,61 @@ namespace VoucherAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddCors();
+            services.AddDiscoveryClient(Configuration);
 
             var appSettingsSection = Configuration.GetSection("AuthSettings");
             services.Configure<Appsettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<Appsettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.UTF8.GetBytes(appSettings.Secret);
+
             //services.AddAuthentication(x =>
             //{
             //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;        
             //})
             //.AddJwtBearer(x =>
             //{
             //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
+            //    x.SaveToken = true;               
+                
             //    x.TokenValidationParameters = new TokenValidationParameters
             //    {
             //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(key),
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Secret"])),
             //        ValidateIssuer = false,
             //        ValidateAudience = false
-            //    };
+            //    };          
             //});
 
-            services.AddDiscoveryClient(Configuration);
-            services.AddCors();
             
             services.AddTransient<IVoucherService<object>, VoucherService>();
             services.AddTransient<MessageBroker, MessageBroker>();
-            
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Voucher API",
+                    Description = "Voucherz.NG Api for handling vouchers",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "Shayne Boyer",
+                        Email = "senunwah@yahoo.com",
+                        Url = "https://twitter.com/temirio"
+                    },
+                    License = new License
+                    {
+                        Name = "Use under LICX",
+                        Url = "https://example.com/license"
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,19 +104,26 @@ namespace VoucherAPI
                 app.UseHsts();
             }
 
+
             app.UseDiscoveryClient();
+            //app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
 
             app.UseCors(options => options
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader()               
+                .AllowAnyHeader()
             );
-
-            app.UseAuthentication();
 
             app.UseHttpsRedirection();
             app.UseMvc();
             
+
 
         }
     }

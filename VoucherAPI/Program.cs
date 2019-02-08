@@ -50,6 +50,6 @@ namespace VoucherAPI
 
                 })     
                 .UseStartup<Startup>().UseNLog()
-            .UseUrls("https://172.20.20.23:5001","http://172.20.20.23:5000");
+                .UseUrls("https://172.20.20.23:5001","http://172.20.20.23:5000");
     }
 }

@@ -13,9 +13,9 @@ namespace VoucherAPILibrary.Utils
         Numeric,
 
         [DefaultValue("Alphabetic")]
-        Alphabetic,
+        Alphabet,
 
-        [DefaultValue("Alpha-Numeric")]
+        [DefaultValue("Alphanumeric")]
         Alphanumeric
     }
 }

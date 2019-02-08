@@ -41,51 +41,80 @@ namespace VoucherAPILibrary.Services
                     List<string> voucherIdList = new List<string>();
                     List<string> voucherCodeList = new List<string>();
 
+                    List<DynamicParameters> parameterList = new List<DynamicParameters>();
+
                     for (int i = 0; i < voucher.VoucherCount; i++)
                     {
                         voucherIdList.Add(IdGenerator.RandomGen(10));
                         voucherCodeList.Add(CodeGenerator.GetGeneratedCode(voucher.Metadata));
+
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("VoucherType", voucher.VoucherType);
+                        parameters.Add("Campaign", voucher.Campaign);
+                        parameters.Add("DiscountType", voucher.Discount.DiscountType);
+                        parameters.Add("PercentOff", voucher.Discount.PercentOff);
+                        parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
+                        parameters.Add("AmountOff", voucher.Discount.AmountOff);
+                        parameters.Add("UnitOff", voucher.Discount.UnitOff);
+                        parameters.Add("GiftAmount", voucher.Gift.Amount);
+                        parameters.Add("GiftBalance", voucher.Gift.Balance);
+                        parameters.Add("ValueSpec", voucher.Value.ValueSpec);
+                        parameters.Add("Amount", voucher.Value.Amount);
+                        parameters.Add("StartDate", voucher.StartDate);
+                        parameters.Add("ExpirationDate", voucher.ExpirationDate);
+                        parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
+                        parameters.Add("Length", voucher.Metadata.Length);
+                        parameters.Add("Charset", voucher.Metadata.CharSet);
+                        parameters.Add("Prefix", voucher.Metadata.Prefix);
+                        parameters.Add("Suffix", voucher.Metadata.Suffix);
+                        parameters.Add("Pattern", voucher.Metadata.Pattern);
+                        parameters.Add("CreatedBy", voucher.CreatedBy);
+                        parameters.Add("CreationDate", voucher.CreationDate);
+                        parameters.Add("BatchNo", batchno);
+                        parameters.Add("VoucherCount", voucher.VoucherCount);
+                        parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                        parameters.Add("VoucherId", voucherIdList.ElementAt(i));
+                        parameters.Add("Code", voucherCodeList.ElementAt(i));
+
+                        parameterList.Add(parameters);
                     }
 
-                    Task.Run(async () =>
+                    //DynamicParameters parameters = new DynamicParameters();
+                    //parameters.Add("VoucherType", voucher.VoucherType);
+                    //parameters.Add("Campaign", voucher.Campaign);
+                    //parameters.Add("DiscountType", voucher.Discount.DiscountType);
+                    //parameters.Add("PercentOff", voucher.Discount.PercentOff);
+                    //parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
+                    //parameters.Add("AmountOff", voucher.Discount.AmountOff);
+                    //parameters.Add("UnitOff", voucher.Discount.UnitOff);
+                    //parameters.Add("GiftAmount", voucher.Gift.Amount);
+                    //parameters.Add("GiftBalance", voucher.Gift.Balance);
+                    //parameters.Add("ValueSpec", voucher.Value.ValueSpec);
+                    //parameters.Add("Amount", voucher.Value.Amount);
+                    //parameters.Add("StartDate", voucher.StartDate);
+                    //parameters.Add("ExpirationDate", voucher.ExpirationDate);
+                    //parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
+                    //parameters.Add("Length", voucher.Metadata.Length);
+                    //parameters.Add("Charset", voucher.Metadata.CharSet);
+                    //parameters.Add("Prefix", voucher.Metadata.Prefix);
+                    //parameters.Add("Suffix", voucher.Metadata.Suffix);
+                    //parameters.Add("Pattern", voucher.Metadata.Pattern);
+                    //parameters.Add("CreatedBy", voucher.CreatedBy);
+                    //parameters.Add("CreationDate", voucher.CreationDate);
+                    //parameters.Add("BatchNo", batchno);
+                    //parameters.Add("VoucherCount", voucher.VoucherCount);
+                    //parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+
+                    Task.Run(() =>
                     {
-                        using (var conn = Connection)
+                        Parallel.ForEach(parameterList, async (parameter) => 
                         {
-                            DynamicParameters parameters = new DynamicParameters();
-                            parameters.Add("VoucherType", voucher.VoucherType);
-                            parameters.Add("Campaign", voucher.Campaign);
-                            parameters.Add("DiscountType", voucher.Discount.DiscountType);
-                            parameters.Add("PercentOff", voucher.Discount.PercentOff);
-                            parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
-                            parameters.Add("AmountOff", voucher.Discount.AmountOff);
-                            parameters.Add("UnitOff", voucher.Discount.UnitOff);
-                            parameters.Add("GiftAmount", voucher.Gift.Amount);
-                            parameters.Add("GiftBalance", voucher.Gift.Balance);
-                            parameters.Add("ValueSpec", voucher.Value.ValueSpec);
-                            parameters.Add("Amount", voucher.Value.Amount);
-                            parameters.Add("StartDate", voucher.StartDate);
-                            parameters.Add("ExpirationDate", voucher.ExpirationDate);
-                            parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
-                            parameters.Add("Length", voucher.Metadata.Length);
-                            parameters.Add("Charset", voucher.Metadata.CharSet);
-                            parameters.Add("Prefix", voucher.Metadata.Prefix);
-                            parameters.Add("Suffix", voucher.Metadata.Suffix);
-                            parameters.Add("Pattern", voucher.Metadata.Pattern);
-                            parameters.Add("CreatedBy", voucher.CreatedBy);
-                            parameters.Add("CreationDate", voucher.CreationDate);
-                            parameters.Add("BatchNo", batchno);
-                            parameters.Add("VoucherCount", voucher.VoucherCount);
-                            parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-
-                            for (int i = 0; i < voucher.VoucherCount; i++)
+                            using (var conn = Connection)
                             {
-                                parameters.Add("VoucherId", voucherIdList.ElementAt(i));
-                                parameters.Add("Code", voucherCodeList.ElementAt(i));
-
                                 try
                                 {
-                                    int rowsAffected = await conn.ExecuteAsync("create", parameters, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                                    int ReturnErrorCode = parameters.Get<int>("ReturnValue");
+                                    int rowsAffected = await conn.ExecuteAsync("create", parameter, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+                                    int ReturnErrorCode = parameter.Get<int>("ReturnValue");
 
                                     switch (rowsAffected)
                                     {
@@ -98,25 +127,24 @@ namespace VoucherAPILibrary.Services
                                             break;
 
                                         case int n when n > 4:
-                                            Console.WriteLine("{0} was successfully created at {1}", parameters.Get<string>("Code"), DateTime.Now);
-                                            _logger.LogInformation("" + voucherCodeList.ElementAt<string>(i) + " was created successfully");
+                                            Console.WriteLine("{0} was successfully created at {1}", parameter.Get<string>("Code"), DateTime.Now);
+                                            _logger.LogInformation("" + parameter.Get<string>("Code") + " was created successfully");
                                             break;
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    _logger.LogError(ex, "Oops, an exception occurred");                        
+                                    _logger.LogError(ex, "Oops, an exception occurred");
                                 }
                                 finally
                                 {
                                     if (conn.State == ConnectionState.Open)
                                         conn.Close();
-                                }
+                                }      
                             }
-                        }
+                        });
                     });
-
-                   
+                  
                     Thread messageThread = new Thread(()=>_messageBroker.PublishMessage(new CustomMessage("USER "+voucher.CreatedBy+" created "+voucher.VoucherCount+" vouchers","USER","CREATE",String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                     messageThread.Start();
 
