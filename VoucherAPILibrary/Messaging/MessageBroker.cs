@@ -21,40 +21,39 @@ namespace VoucherAPILibrary.Messaging
         const string EXCHANGENAME = "net_voucherz_exchange";
         const string QUEUENAME = ROUTING_KEY;
 
-        //public MessageBroker ()
-        //{
-        //    var config = new ConfigurationBuilder()
-        //            .AddJsonFile("appsettings.json")
-        //            .Build();
-
-        //    config.GetSection("RabbitMqConnection").Bind(factory);
-        //}
-
         public void PublishMessage(CustomMessage customMessage)
         {
+            factory.HostName = "192.168.43.55";
+            factory.UserName = "server";
+            factory.Password = "admin";
+            factory.VirtualHost = "/";
+            factory.AutomaticRecoveryEnabled = true;
+            factory.RequestedHeartbeat = 30;
 
-            //factory.HostName = "172.20.20.23";
-            //factory.UserName = "guest";
-            //factory.Password = "guest";
-            //factory.VirtualHost = "/";
-            //factory.AutomaticRecoveryEnabled = true;
-            //factory.RequestedHeartbeat = 30;
+            try
+            {
+                using (var conn = factory.CreateConnection())
+                {
+                    Console.WriteLine("Connection to Audit Service::Initiated");
+                    using (var Channel = conn.CreateModel())
+                    {
+                        Channel.ExchangeDeclare(exchange: EXCHANGENAME, type: "topic", durable: true);
+                        Channel.QueueDeclare(QUEUENAME, true, false, false, null);
+                        Channel.QueueBind(QUEUENAME, EXCHANGENAME, ROUTING_KEY);
 
-            //using (var conn = factory.CreateConnection())
-            //{
-            //    using(var Channel = conn.CreateModel())
-            //    {
-                    
-            //        Channel.ExchangeDeclare(exchange: EXCHANGENAME, type: "topic", durable: true);
-            //        Channel.QueueDeclare(QUEUENAME, true, false, false, null);
-            //        Channel.QueueBind(QUEUENAME, EXCHANGENAME, ROUTING_KEY);
+                        var message = JsonConvert.SerializeObject(customMessage);
+                        var bytes = Encoding.ASCII.GetBytes(message);
+                        Channel.BasicPublish(EXCHANGENAME, ROUTING_KEY, null, bytes);
+                        Console.WriteLine("Successfully published to Audit Service");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Publish call failed due to {0}",ex.Message);
+            }
+            
 
-                    
-            //        var message = JsonConvert.SerializeObject(customMessage);
-            //        var bytes = Encoding.ASCII.GetBytes(message);
-            //        Channel.BasicPublish(EXCHANGENAME, ROUTING_KEY, null, bytes);
-            //    }
-            //}
 
             
         }

@@ -69,7 +69,7 @@ namespace VoucherAPILibrary.Responses
             }
             RedeemedAmount = redeemedAmount;
             StartDate = String.Format("{0:d/M/yyyy}", startDate);
-            ExpiryDate = String.Format("{0:d/M/yyyy}", ExpiryDate);
+            ExpiryDate = String.Format("{0:d/M/yyyy}", expiryDate);
 
             switch (active)
             {
@@ -81,7 +81,7 @@ namespace VoucherAPILibrary.Responses
                     break;
             }
 
-            DateCreated = String.Format("{0:d/M/yyyy}", DateCreated);
+            DateCreated = String.Format("{0:d/M/yyyy}", dateCreated);
         }
     }
 }

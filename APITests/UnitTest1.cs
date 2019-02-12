@@ -23,7 +23,7 @@ namespace APITests
         {
             var okResult = await _controller.GetAll("Enunwah");
 
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            Assert.IsType<OkObjectResult>( okResult);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace APITests
         {
             var okResult = await _controller.GetAllDiscount("Enunwah");
 
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            Assert.IsType<OkObjectResult>(okResult);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace APITests
         {
             var okResult = await _controller.GetDiscount(DiscountType.amount,"Enunwah");
 
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            Assert.IsType<OkObjectResult>(okResult);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace APITests
         {
             var okResult = await _controller.GetAllGift("Enunwah");
 
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            Assert.IsType<OkObjectResult>(okResult);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace APITests
         {
             var okResult = await _controller.GetAllValue("Enunwah");
 
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            Assert.IsType<OkObjectResult>(okResult);
         }
 
         

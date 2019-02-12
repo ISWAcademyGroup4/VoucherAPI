@@ -8,7 +8,7 @@ namespace VoucherAPILibrary.Messaging
 {
     public class CustomMessage
     {
-        public CustomMessage(string description, string role, string @event, string eventDate)
+        public CustomMessage(string description, string email, string role, string @event, string eventDate)
         {
             Description = description ?? throw new ArgumentNullException(nameof(description));
             Role = role ?? throw new ArgumentNullException(nameof(role));
@@ -17,6 +17,7 @@ namespace VoucherAPILibrary.Messaging
         }
 
         public string Description { get; set; }
+        public string Email { get; set; }
 
         public string Role { get; set; }
 

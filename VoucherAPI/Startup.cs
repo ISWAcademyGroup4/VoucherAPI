@@ -14,12 +14,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VoucherAPILibrary.Services;
 using Steeltoe.Discovery.Client;
-using static VoucherAPILibrary.Helpers.AppSettings;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using VoucherAPILibrary.Messaging;
 using Swashbuckle.AspNetCore.Swagger;
+using VoucherAPILibrary.Helpers;
+using VoucherAPILibrary.Security;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace VoucherAPI
 {
@@ -34,41 +37,39 @@ namespace VoucherAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {         
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             services.AddCors();
             services.AddDiscoveryClient(Configuration);
+            var _jwtAuthSettings = Configuration.GetSection("JwtAuthentication");
+            services.Configure<JWTAuthentication>(_jwtAuthSettings);
+            var _jwtAuthentication = _jwtAuthSettings.Get<JWTAuthentication>();
+            var secretKey = Encoding.UTF8.GetBytes(_jwtAuthentication.SecurityKey);
 
-            var appSettingsSection = Configuration.GetSection("AuthSettings");
-            services.Configure<Appsettings>(appSettingsSection);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {              
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
 
-            var appSettings = appSettingsSection.Get<Appsettings>();
-            var key = Encoding.UTF8.GetBytes(appSettings.Secret);
-
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;        
-            //})
-            //.AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;               
-                
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Secret"])),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };          
-            //});
-
-            
+                    ValidIssuer = "http://localhost:5000",
+                    ValidAudience = "http://localhost:5000",
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKey)
+                };
+            });
             services.AddTransient<IVoucherService<object>, VoucherService>();
             services.AddTransient<MessageBroker, MessageBroker>();
-
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -79,14 +80,14 @@ namespace VoucherAPI
                     TermsOfService = "None",
                     Contact = new Contact
                     {
-                        Name = "Shayne Boyer",
+                        Name = "Enunwah",
                         Email = "senunwah@yahoo.com",
                         Url = "https://twitter.com/temirio"
                     },
                     License = new License
                     {
-                        Name = "Use under LICX",
-                        Url = "https://example.com/license"
+                        Name = "InterswitchGroup",
+                        Url = "https://interswitchgroup.com/license"
                     }
                 });
             });
@@ -103,28 +104,21 @@ namespace VoucherAPI
             {
                 app.UseHsts();
             }
-
-
-            app.UseDiscoveryClient();
-            //app.UseAuthentication();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-
-
             app.UseCors(options => options
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseDiscoveryClient();
+            //app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "VoucherAPI Documentation");
+            });          
+            //app.UseHttpsRedirection();
             
-
-
+            app.UseMvc();           
         }
     }
 }

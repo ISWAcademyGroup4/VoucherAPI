@@ -72,49 +72,23 @@ namespace VoucherAPILibrary.Services
                         parameters.Add("CreationDate", voucher.CreationDate);
                         parameters.Add("BatchNo", batchno);
                         parameters.Add("VoucherCount", voucher.VoucherCount);
-                        parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
                         parameters.Add("VoucherId", voucherIdList.ElementAt(i));
                         parameters.Add("Code", voucherCodeList.ElementAt(i));
 
                         parameterList.Add(parameters);
                     }
 
-                    //DynamicParameters parameters = new DynamicParameters();
-                    //parameters.Add("VoucherType", voucher.VoucherType);
-                    //parameters.Add("Campaign", voucher.Campaign);
-                    //parameters.Add("DiscountType", voucher.Discount.DiscountType);
-                    //parameters.Add("PercentOff", voucher.Discount.PercentOff);
-                    //parameters.Add("AmountLimit", voucher.Discount.AmountLimit);
-                    //parameters.Add("AmountOff", voucher.Discount.AmountOff);
-                    //parameters.Add("UnitOff", voucher.Discount.UnitOff);
-                    //parameters.Add("GiftAmount", voucher.Gift.Amount);
-                    //parameters.Add("GiftBalance", voucher.Gift.Balance);
-                    //parameters.Add("ValueSpec", voucher.Value.ValueSpec);
-                    //parameters.Add("Amount", voucher.Value.Amount);
-                    //parameters.Add("StartDate", voucher.StartDate);
-                    //parameters.Add("ExpirationDate", voucher.ExpirationDate);
-                    //parameters.Add("RedemptionCount", voucher.Redemption.RedemptionCount);
-                    //parameters.Add("Length", voucher.Metadata.Length);
-                    //parameters.Add("Charset", voucher.Metadata.CharSet);
-                    //parameters.Add("Prefix", voucher.Metadata.Prefix);
-                    //parameters.Add("Suffix", voucher.Metadata.Suffix);
-                    //parameters.Add("Pattern", voucher.Metadata.Pattern);
-                    //parameters.Add("CreatedBy", voucher.CreatedBy);
-                    //parameters.Add("CreationDate", voucher.CreationDate);
-                    //parameters.Add("BatchNo", batchno);
-                    //parameters.Add("VoucherCount", voucher.VoucherCount);
-                    //parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-
                     Task.Run(() =>
                     {
                         Parallel.ForEach(parameterList, async (parameter) => 
                         {
                             using (var conn = Connection)
-                            {
+                            {                              
                                 try
                                 {
+
+                                    conn.Open();
                                     int rowsAffected = await conn.ExecuteAsync("create", parameter, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
-                                    int ReturnErrorCode = parameter.Get<int>("ReturnValue");
 
                                     switch (rowsAffected)
                                     {
@@ -140,15 +114,15 @@ namespace VoucherAPILibrary.Services
                                 {
                                     if (conn.State == ConnectionState.Open)
                                         conn.Close();
-                                }      
+                                }
                             }
                         });
                     });
                   
-                    Thread messageThread = new Thread(()=>_messageBroker.PublishMessage(new CustomMessage("USER "+voucher.CreatedBy+" created "+voucher.VoucherCount+" vouchers","USER","CREATE",String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                    Thread messageThread = new Thread(()=>_messageBroker.PublishMessage(new CustomMessage("USER "+voucher.CreatedBy+" created "+voucher.VoucherCount+" vouchers",voucher.CreatedBy,"USER","CREATE",String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                     messageThread.Start();
 
-                    return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(202)) as object;
+                    return new CreateResponse("Your request was successfully received and vouchers are being created",voucher.Campaign,voucher.VoucherType.ToString(),voucher.VoucherCount, batchno, HttpResponseHandler.GetServiceResponse(201)) as object;
                 }
                 catch (Exception ex)
                 {
@@ -174,7 +148,7 @@ namespace VoucherAPILibrary.Services
                         var responseObject = GetVoucherHandler.GetResponse(reader);
                         reader.Close();
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + MerchantId + " requested for VOUCHER: " + voucherCode + "", "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + MerchantId + " requested for VOUCHER: " + voucherCode + "",MerchantId, "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return new GetResponse("Your request was processed successfully", responseObject , HttpResponseHandler.GetServiceResponse(200)) as object;
@@ -221,7 +195,7 @@ namespace VoucherAPILibrary.Services
                             }
                         });
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " updated VOUCHER: " + voucherCode + "", "USER", "UPDATE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " updated VOUCHER: " + voucherCode + "",Merchant, "USER", "UPDATE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return new UpdateResponse("Your Voucher was updated Successfully", HttpResponseHandler.GetServiceResponse(202)) as object;
@@ -268,7 +242,7 @@ namespace VoucherAPILibrary.Services
                         Task.WaitAll(task);
                     }
 
-                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " deleted VOUCHER: " + voucherCode + "", "USER", "DELETE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " deleted VOUCHER: " + voucherCode + "",Merchant, "USER", "DELETE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                     messageThread.Start();
 
                     return new DeleteResponse("Your voucher was successfully deleted",HttpResponseHandler.GetServiceResponse(200)) as object;
@@ -297,7 +271,7 @@ namespace VoucherAPILibrary.Services
                         var responseObject = GetVoucherHandler.GetListResponse(reader) as object;
                         reader.Close();
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " requested for CAMPAIGN: " +campaign + "", "USER", "LIST CAMPAIGN", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " requested for CAMPAIGN: " +campaign + "",Merchant, "USER", "LIST CAMPAIGN", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
                         
                         return responseObject;
@@ -341,7 +315,7 @@ namespace VoucherAPILibrary.Services
 
                         Task.WaitAll(task);
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " enabled VOUCHER: " + code + "", "USER", "ENABLE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " enabled VOUCHER: " + code + "",Merchant, "USER", "ENABLE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                     }
@@ -386,7 +360,7 @@ namespace VoucherAPILibrary.Services
 
                         Task.WaitAll(task);
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " disabled VOUCHER: " + code + "", "USER", "DISABLE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " disabled VOUCHER: " + code + "",Merchant, "USER", "DISABLE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
                     }
                     return new DisableResponse(HttpResponseHandler.GetServiceResponse(200))as object;
@@ -430,7 +404,7 @@ namespace VoucherAPILibrary.Services
                             }
                         });
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " added gift balance with VOUCHER: " + code + "", "USER", "ADD GIFT BALANCE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " added gift balance with VOUCHER: " + code + "",Merchant, "USER", "ADD GIFT BALANCE", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return new AddGiftResponse("Your request was processed successfully", HttpResponseHandler.GetServiceResponse(201)) as object;
@@ -462,7 +436,7 @@ namespace VoucherAPILibrary.Services
                     }
                     _logger.LogInformation("Batch Count was retrieved successfully");
 
-                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("SERVER retrieved vouchers with BATCH NO: " + batchno + "", "SERVER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("SERVER retrieved vouchers with BATCH NO: " + batchno + "","admin", "SERVER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                     messageThread.Start();
 
                     return new BatchResponse(percentage, HttpResponseHandler.GetServiceResponse(200)) as object;
@@ -539,7 +513,7 @@ namespace VoucherAPILibrary.Services
 
                     _logger.LogInformation(new EventId(), "Successfully retrieved Discount all vouchers");
 
-                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all discount vouchers", "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                    Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all discount vouchers",Merchant, "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                     messageThread.Start();
 
                     return responseObject as object;
@@ -570,7 +544,7 @@ namespace VoucherAPILibrary.Services
 
                         _logger.LogInformation(new EventId(), "Successfully retrieved Discount vouchers of Type " + discountType + "");
                         
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all discount "+discountType.ToString()+" vouchers", "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all discount "+discountType.ToString()+" vouchers",Merchant, "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return GetVoucherHandler.GetListResponse(reader) as object;
@@ -599,7 +573,7 @@ namespace VoucherAPILibrary.Services
                         var responseObject = GetVoucherHandler.GetListResponse(reader);
                         _logger.LogInformation(new EventId(), "Successfully retrieved Gift vouchers");
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all gift vouchers", "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all gift vouchers",Merchant, "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return responseObject as object;
@@ -629,7 +603,7 @@ namespace VoucherAPILibrary.Services
 
                         _logger.LogInformation(new EventId(), "Successfully retrieved value vouchers");
 
-                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all value vouchers", "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
+                        Thread messageThread = new Thread(() => _messageBroker.PublishMessage(new CustomMessage("USER " + Merchant + " retrieved all value vouchers",Merchant, "USER", "GET", String.Format("{0:d/m/yyyy H:mm:ss}", DateTime.Now))));
                         messageThread.Start();
 
                         return responseObject as object;

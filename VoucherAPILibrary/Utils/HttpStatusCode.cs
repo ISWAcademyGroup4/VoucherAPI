@@ -13,8 +13,8 @@ namespace VoucherAPILibrary.Utils
         [Description("Your request was successful")]
         OK = 200,
 
-        [DefaultValue("Processed")]
-        [Description("Your request was processed successfully")]
+        [DefaultValue("Created")]
+        [Description("Your vouchers were created successfully")]
         Created = 201,
 
         [DefaultValue("Accepted")]
